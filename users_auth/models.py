@@ -19,7 +19,7 @@ APPROVE_USER_STATUS = (
 
 class User(AbstractUser):
     is_doctor = models.BooleanField(default=False)
-    is_user = models.BooleanField(default=False)
+    is_police = models.BooleanField(default=False)
     user_status = models.CharField(max_length=50, choices=APPROVE_USER_STATUS, default=1)
 
     created = models.DateTimeField(auto_now_add=True)
@@ -35,6 +35,9 @@ class Doctor(models.Model):
 
     updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='update_doctor', null=True, blank=True)
 
+    def __str__(self):
+        return "Dr. {name}".format(name=self.full_name)
+
 
 class UserInfo(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_info')
@@ -45,7 +48,7 @@ class UserInfo(models.Model):
     updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='update_info', null=True, blank=True)
 
     def __str__(self):
-        return "{username}'s Info".format(username=self.user.username)
+        return "{username}'s Info".format(username=self.user)
 
 
 @receiver(post_save, sender=User)

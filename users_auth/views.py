@@ -6,7 +6,11 @@ from django.http import HttpResponse
 
 class LoginView(View):
     def get(self, request):
-        return HttpResponse("Login GET")
+
+        context = {
+
+        }
+        return render(request, 'users_auth/login.html', context)
 
     def post(self, request):
         pass
