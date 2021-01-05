@@ -10,3 +10,11 @@ class LoginView(View):
 
     def post(self, request):
         pass
+
+
+class Registration(View):
+    def get(self, request):
+        context = {
+
+        }
+        return render(request, 'users_auth/user_register.html', context)
