@@ -31,8 +31,8 @@ class UserProfile(models.Model):
     full_name = models.CharField(max_length=100, null=True, blank=True)
     cell = models.CharField(max_length=11, null=True, blank=True)
     address = models.CharField(max_length=200)
-
-    updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='update_info', null=True, blank=True)
+    profile_picture = models.ImageField(default='default.jpg', upload_to='profile_pics', null=True, blank=True)
+    updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='update_profile', null=True, blank=True)
 
     def __str__(self):
         return "{username}'s Info".format(username=self.user)
