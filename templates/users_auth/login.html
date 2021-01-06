@@ -5,6 +5,10 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <!------ Include the above in your HEAD tag ---------->
 
+<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+<script src="{% static 'js/jquery-3.5.1.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+
 <style>
     html {
   background-color: #56baed;
@@ -141,7 +145,33 @@ input[type=text] {
   border-radius: 5px 5px 5px 5px;
 }
 
+input[type=password] {
+  background-color: #f6f6f6;
+  border: none;
+  color: #0d0d0d;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 5px;
+  width: 85%;
+  border: 2px solid #f6f6f6;
+  -webkit-transition: all 0.5s ease-in-out;
+  -moz-transition: all 0.5s ease-in-out;
+  -ms-transition: all 0.5s ease-in-out;
+  -o-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+  -webkit-border-radius: 5px 5px 5px 5px;
+  border-radius: 5px 5px 5px 5px;
+}
+
 input[type=text]:focus {
+  background-color: #fff;
+  border-bottom: 2px solid #5fbae9;
+}
+
+input[type=password]:focus {
   background-color: #fff;
   border-bottom: 2px solid #5fbae9;
 }
@@ -275,18 +305,25 @@ input[type=text]:placeholder {
 
     <!-- Icon -->
     <div class="fadeIn first">
-      <img src="{% static 'img/user-icon.webp' %}" id="icon" alt="User Icon" />
+      <img src="{% static 'img/user-icon.webp' %}" height="200" width="200" id="icon" alt="User Icon" />
     </div>
 
+      {% if messages  %}
+          {% for message in messages  %}
+            <h5 class="text-center alert alert-{{message.tags}}"> {{message}} </h5>
+          {% endfor %}
+      {% endif %}
+
     <!-- Login Form -->
-    <form>
-      <input type="text" id="login" class="fadeIn second" name="login" placeholder="login">
-      <input type="text" id="password" class="fadeIn third" name="login" placeholder="password">
+    <form method="post" action="{% url 'authenticate:login_url' %}"> {% csrf_token %}
+      <input type="text" id="login" class="fadeIn second" name="username" placeholder="login">
+      <input type="password" id="password" class="fadeIn third" name="password" placeholder="password">
       <input type="submit" class="fadeIn fourth" value="Log In">
     </form>
 
     <!-- Remind Passowrd -->
     <div id="formFooter">
+        <a class="underlineHover" href="{% url 'authenticate:registration_url' %}">Sign Up</a>
       <a class="underlineHover" href="#">Forgot Password?</a>
     </div>
 
