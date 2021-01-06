@@ -47,8 +47,8 @@ class Accommodation(models.Model):
 
 
 class BookAccommodation(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    room = models.ForeignKey(Room, on_delete=models.SET_NULL, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='book_user', null=True, blank=True)
+    room = models.ForeignKey(Room, on_delete=models.SET_NULL, related_name='book_room', null=True, blank=True)
     start_date = models.DateField()
     end_date = models.DateField()
     requested_date = models.DateTimeField(auto_now_add=True)
@@ -63,7 +63,7 @@ class BookAccommodation(models.Model):
 
 
 class AccommodationBill(models.Model):
-    bill = models.ForeignKey(BookAccommodation, on_delete=models.SET_NULL, null=True, blank=True)
+    bill = models.ForeignKey(BookAccommodation, on_delete=models.SET_NULL, related_name='bill', null=True, blank=True)
     amount_received = models.FloatField()
     date = models.DateTimeField(auto_now_add=True)
     note = models.TextField()
