@@ -25,6 +25,7 @@ PAYMENT_STATUS_CHOICES = (
 
 class Room(models.Model):
     room_number = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='rooms', null=True, blank=True)
     description = RichTextUploadingField(null=True, blank=True)
     cost_per_day = models.FloatField(default=0)
     current_status = models.IntegerField(choices=ROOM_STATUS_CHOICES, default=1)
@@ -39,6 +40,7 @@ class Accommodation(models.Model):
     rooms = models.ManyToManyField(Room)
     image = models.ImageField(upload_to='accommodations', null=True, blank=True)
     address = models.ForeignKey(Address, on_delete=models.DO_NOTHING, related_name='accommodation_address' , null=True, blank=True)
+    description = RichTextUploadingField(null=True, blank=True)
 
     def __str__(self):
         return self.name
