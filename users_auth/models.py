@@ -25,6 +25,18 @@ class User(AbstractUser):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True, null=True, blank=True)
 
+    def __str__(self):
+        if self.is_doctor:
+            return "{a} -- Doctor".format(a=self.first_name)
+        elif self.is_manager:
+            return "{a} -- Manager".format(a=self.first_name)
+        elif self.is_police:
+            return "{a} -- Police".format(a=self.first_name)
+        elif self.is_staff:
+            return "{a} -- Admin".format(a=self.username)
+        else:
+            return "{a} -- Normal User".format(a=self.first_name)
+
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_info')
