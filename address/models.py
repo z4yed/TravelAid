@@ -13,7 +13,7 @@ class District(models.Model):
 class Address(models.Model):
     address = models.CharField(max_length=25, null=True, blank=True)
     district = models.ForeignKey(District, on_delete=models.DO_NOTHING, null=True, blank=True)
-    zip_code = models.CharField(max_length=4)
+    zip_code = models.CharField(max_length=4, null=True, blank=True)
 
     def __str__(self):
         return "{a}, {b} - {c}".format(a=self.address, b=self.district, c=self.zip_code)

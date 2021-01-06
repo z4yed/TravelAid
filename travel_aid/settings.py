@@ -41,7 +41,22 @@ INSTALLED_APPS = [
     'users_auth',
     'address',
     'services',
+    'ckeditor',
+    'ckeditor_uploader',
 ]
+
+CKEDITOR_UPLOAD_PATH = "uploads/"
+CKEDITOR_CONFIGS = {
+       'default': {
+           'toolbar': 'Full',
+           'height': 250,
+           'width': '100%',
+           'removePlugins': 'stylesheetparser',
+           'extraPlugins': 'codesnippet',
+       },
+   }
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
