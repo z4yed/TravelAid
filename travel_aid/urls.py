@@ -17,11 +17,16 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from users_auth.views import HomeView
 
 urlpatterns = [
+    path('', HomeView.as_view(), name='home_url'),
     path('admin/', admin.site.urls),
     path('auth/', include('users_auth.urls')),
     path('ckeditor/', include('ckeditor_uploader.urls')),
+    path('address/', include('address.urls')),
+    path('service/', include('services.urls')),
+    path('auth2/', include('address.urls')),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

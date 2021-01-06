@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+    {% include 'navbar.html' %}
+
+    <div class="container">
+        <h2 class="text-success ml-auto">Hi There. </h2>
+        <button id="clickMe"> BTN </button>
+    </div>
+
+
+
+{% endblock content %}
+
+{% block script %}
+
+    <script>
+        $(document).ready(function (){
+           $("#clickMe").click(function (){
+               alert("Hi there. ");
+           }) ;
+        });
+    </script>
+
+{% endblock %}

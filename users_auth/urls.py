@@ -5,6 +5,7 @@ app_name = 'authenticate'
 
 urlpatterns = [
     path('login/', views.LoginView.as_view(), name='login_url'),
+    path('logout/', views.LogoutView.as_view(), name='logout_url'),
     path('register/', views.RegistrationView.as_view(), name='registration_url'),
     path('admin_dashboard/', views.AdminDashboardView.as_view(), name='admin_dashboard_url'),
     path('doctor_dashboard/', views.DoctorDashboardView.as_view(), name='doctor_dashboard_url'),

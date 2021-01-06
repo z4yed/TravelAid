@@ -8,6 +8,14 @@ from django.http import HttpResponse
 # Create your views here.
 
 
+class HomeView(View):
+    def get(self, request):
+        context = {
+
+        }
+        return render(request, 'home.html', context)
+
+
 class AdminDashboardView(View):
     def get(self, request):
         context = {
@@ -62,12 +70,14 @@ class LoginView(View):
                 auth.login(request, user)
                 if user.is_staff:
                     return redirect('authenticate:admin_dashboard_url')
-                if user.is_doctor:
+                elif user.is_doctor:
                     return redirect('authenticate:doctor_dashboard_url')
-                if user.is_police:
+                elif user.is_police:
                     return redirect('authenticate:police_dashboard_url')
-                if user.is_manager:
+                elif user.is_manager:
                     return redirect('authenticate:manager_dashboard_url')
+                else:
+                    return redirect('home_url')
 
             else:
                 messages.warning(request, 'Your account is not Approved By Admin Yet. Please Wait. ')
@@ -75,6 +85,12 @@ class LoginView(View):
         else:
             messages.warning(request, "Incorrect Username or Password")
             return redirect('authenticate:login_url')
+
+
+class LogoutView(View):
+    def get(self, request):
+        auth.logout(request)
+        return redirect('home_url')
 
 
 class RegistrationView(View):
