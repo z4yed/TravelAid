@@ -1,6 +1,9 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib import auth, messages
+
+from services.models import Hospital
+from system.models import Expertise
 from .models import User, UserProfile
 from address.models import District, Address
 
@@ -95,9 +98,12 @@ class LogoutView(View):
 class RegistrationView(View):
     def get(self, request):
         district = District.objects.all()
-
+        expertises = Expertise.objects.all()
+        hospitals = Hospital.objects.all()
         context = {
             'district': district,
+            'expertises': expertises,
+            'hospitals': hospitals,
         }
         return render(request, 'users_auth/user_register.html', context)
 
@@ -113,6 +119,8 @@ class RegistrationView(View):
         district = data.get('district')
         zip_code = data.get('zip_code')
         designation = data.get('designation')
+        expertises = data.getlist('expertises')
+        hospital = data.get('hospital')
 
         email_taken = User.objects.filter(username=email).exists()
         if email_taken:
@@ -144,6 +152,15 @@ class RegistrationView(View):
                 userprofile.cell = contact_number
                 userprofile.address = address_obj
                 userprofile.save()
+
+                # if user is doctor, assign expertises & Hospital to the doctor.
+                if designation == 'doctor':
+                    for value in expertises:
+                        exp_obj = Expertise.objects.get(pk=int(value))
+                        userprofile.expertise.add(exp_obj)
+
+                    hospital_obj = Hospital.objects.get(pk=hospital)
+                    hospital_obj.doctors.add(user)
 
                 messages.success(request, 'Hello, {f_name}. Please Login. '.format(f_name=first_name))
                 return redirect('authenticate:login_url')

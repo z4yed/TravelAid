@@ -34,7 +34,7 @@ class Hospital(models.Model):
     image = models.ImageField(upload_to='hospitals', null=True, blank=True)
     description = RichTextUploadingField(null=True, blank=True)
     address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True, blank=True)
-    doctors = models.ManyToManyField(User)
+    doctors = models.ManyToManyField(User, blank=True)
     emergency_cell = models.CharField(max_length=11)
 
     def __str__(self):
