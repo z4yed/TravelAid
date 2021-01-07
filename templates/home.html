@@ -6,19 +6,102 @@
     {% include 'navbar.html' %}
     {% include 'slider.html' %}
 
-    <section id="services">
-        <div class="container">
-        </div>
-    </section>
+    <section class="m-5" id="Services" style="background: #e4dde9">
+		<div class="row">
+			<div class="col-lg-12 my-3">
+				<h2 class="text-center">Select Your Service</h2>
+			</div>
+		</div>
+		<div class="row mx-3">
+			<div class="col-lg-4">
+				<div class="card mb-3">
+					<div class="card-header">
+						<h3 class="text-center">Accommodations</h3>
+					</div>
+					<div class="card-body">
+						<img style="height: 240px; width: 830px;" src="{% static 'img/sliders/accommodation1.jpg' %}" alt="" class="img-fluid">
+					</div>
+					<div class="card-footer">
+						<a href="{% url 'services:accommodation_list_url' %}" type="button" class="btn btn-primary btn-block">Search Accommodation</a>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4">
+				<div class="card mb-3">
+					<div class="card-header">
+						<h3 class="text-center">Hospital</h3>
+					</div>
+					<div class="card-body">
+						<img style="height: 240px; width: 830px;" src="{% static 'img/sliders/hospital2.jpg' %}" alt="" class="img-fluid">
+					</div>
+					<div class="card-footer">
+						<a href="{% url 'services:hospital_list_url' %}" type="button" class="btn btn-primary btn-block">Search Hospital</a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
+    <section class="m-5 jumbotron">
+        <!--Section heading-->
+        <h2 class="h1-responsive font-weight-bold text-center my-4">Contact us</h2>
+        <!--Section description-->
+        <p class="text-center w-responsive mx-auto mb-5">Do you have any questions? Please do not hesitate to contact us directly. Our team will come back to you within
+            a matter of hours to help you.</p>
+
+        <div class="row">
+
+                <div class="col-md-2">
+                </div>
+
+                <div class="col-md-8">
+                    <form class="form from-group" method="post">
+                        {% csrf_token %}
+                        {% if user.is_authenticated %}
+                            <textarea id="id_proceduress" maxlength="2000" name="description" rows="50"
+                                          data-processed="0"
+                                          data-config='{"skin": "moono-lisa", "toolbar_Basic":
+                              [["Source", "-", "Bold", "Italic", "Image"]],
+                               "toolbar_Full": [["Styles", "Format", "Bold", "Italic", "Underline",
+                                "Strike", "SpellChecker", "Undo", "Redo"], ["Link", "Unlink", "Anchor"],
+                                ["Image", "Flash", "Table", "HorizontalRule"], ["TextColor", "BGColor"],
+                                ["Smiley", "SpecialChar"], ["Source"],  ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"], ["Outdent", "Indent"]],
+                                "toolbar": "Full", "height": 200, "filebrowserWindowWidth": 940,
+
+                                "filebrowserWindowHeight": 725,
+                                "filebrowserUploadUrl": "/ckeditor/upload/",
+                                "filebrowserBrowseUrl": "/ckeditor/browse/",
+
+                                "language": "en-us" }'
+                                          data-external-plugin-resources='[]'
+                                          data-type="ckeditortype">
+
+                             </textarea>
+
+                            <input class="btn btn-outline btn-info mt-3" type="submit" name="" value="Send">
+                        {% else %}
+
+                            <h2 class="text-info text-center"> Please Log In to reach us. </h2>
+
+                        {% endif %}
+
+
+                    </form>
+                </div>
+
+                    <div class="col-md-2">
+                    </div>
+
+
+        </div>
+
+    </section>
 
 
 {% endblock content %}
 
 {% block script %}
-
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <!-- This Script is required for Carousel Animaiton -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 
     <script>

@@ -195,7 +195,7 @@
                                         </select>
                                     </div>
                                     <div class="col-6">
-                                        <select name="hospital" id="hospital" class="form-control" required>
+                                        <select name="hospital" id="hospital" class="form-control">
                                             <option value="" disabled selected>Select Hospital</option>
                                             {% for hos in hospitals %}
                                                 <option value="{{ hos.id }}">{{ hos.name }}</option>
@@ -230,10 +230,4 @@
         }
 
     }
-</script>
-
-<script>
-    $(document).ready(function (){
-        $(".select2").select2();
-    })
 </script>

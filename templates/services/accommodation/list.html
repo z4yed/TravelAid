@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+    {% include 'navbar.html' %}
+
+<div class="container-fluid">
+	<div class="bg-success">
+		<h2 class="text-center">
+			Search Accommodation
+		</h2>
+		<hr>
+	</div>
+	<div class="my-5">
+		<form method='post' action="">
+            <div class="row">
+                <div class="col-md-4">
+					<input type="text" name="location" placeholder="Enter Location" id="location" class="form-control">
+                </div>
+                <div class="col-md-4">
+                    <select id='district' name='district' class="form-control">
+						<option value='' disabled selected>Select District</option>
+                        {% for district in districts %}
+                            <option value="{{ district.id }}">{{ district.name }}</option>
+                        {% endfor %}
+					</select>
+                </div>
+                <div class="col-md-2">
+                    <input type="text" name="zip_code" placeholder="Zip Code" maxlength="4" id="zip_code" class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <input type="submit" class="btn btn-outline-info" id="search_submit">
+                </div>
+            </div>
+
+
+
+			</form>
+
+		</div>
+
+
+		<section class="jumbotron" id="accommodation_section">
+			<div class="row mt-2">
+				<div class="col-lg-12">
+					<h2 class="text-center">Available Accommodations</h2>
+				</div>
+			</div>
+			<div class="row mt-3">
+               {% for accommodation in accommodations %}
+                   <div class="col-lg-4">
+					<div class="card">
+						<div class="card-header">
+							<h5 class="text-center">{{ accommodation.name }}</h5>
+							<h6 class="text-center">{{ accommodation.address.get_full_address }}</h6>
+						</div>
+						<div class="card-body">
+							<img style="height: 220px; width: 830px" src="{{ accommodation.image.url }}" alt="Image Not Available" class="img-fluid">
+						</div>
+						<div class="card-footer">
+							<a href="" type="button" class="btn btn-primary btn-block">View Details</a>
+						</div>
+					</div>
+				</div>
+               {% endfor %}
+			</div>
+		</section>
+	</div>
+
+{% endblock content %}
