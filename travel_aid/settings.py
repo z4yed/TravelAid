@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'services',
     'ckeditor',
     'ckeditor_uploader',
+    'system',
 ]
 
 CKEDITOR_UPLOAD_PATH = "uploads/"

@@ -20,7 +20,7 @@
         </li>
         {% else %}
         <li class="nav-item">
-          <a class="nav-link" href="">Sing Up</a>
+          <a class="nav-link" href="{% url 'authenticate:registration_url' %}">Sing Up</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'authenticate:login_url' %}">Log In</a>

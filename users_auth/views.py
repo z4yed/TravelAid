@@ -2,8 +2,7 @@ from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib import auth, messages
 from .models import User, UserProfile
-from django.http import HttpResponse
-
+from address.models import District, Address
 
 # Create your views here.
 
@@ -95,8 +94,10 @@ class LogoutView(View):
 
 class RegistrationView(View):
     def get(self, request):
-        context = {
+        district = District.objects.all()
 
+        context = {
+            'district': district,
         }
         return render(request, 'users_auth/user_register.html', context)
 
@@ -109,6 +110,8 @@ class RegistrationView(View):
         confirm_password = data.get('confirm_password')
         contact_number = data.get('contact_number')
         address = data.get('address')
+        district = data.get('district')
+        zip_code = data.get('zip_code')
         designation = data.get('designation')
 
         email_taken = User.objects.filter(username=email).exists()
@@ -130,10 +133,16 @@ class RegistrationView(View):
                     user.is_police = True
                     user.save()
 
+                address_obj = Address()
+                address_obj.address = address
+                address_obj.district = District.objects.get(pk=int(district))
+                address_obj.zip_code = zip_code
+                address_obj.save()
+
                 userprofile = UserProfile.objects.get(user=user)
                 userprofile.full_name = user.get_full_name()
-                userprofile.address = address
                 userprofile.cell = contact_number
+                userprofile.address = address_obj
                 userprofile.save()
 
                 messages.success(request, 'Hello, {f_name}. Please Login. '.format(f_name=first_name))

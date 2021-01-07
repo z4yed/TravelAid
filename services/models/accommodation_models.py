@@ -1,8 +1,8 @@
 from django.db import models
 from ckeditor_uploader.fields import RichTextUploadingField
 from address.models import Address
-from users_auth.models import User, APPROVE_USER_STATUS
 # Create your models here.
+from users_auth.models import APPROVE_USER_STATUS, User
 
 AVAILABLE = 1
 PENDING = 2
@@ -23,7 +23,19 @@ PAYMENT_STATUS_CHOICES = (
 )
 
 
+class Accommodation(models.Model):
+    name = models.CharField(max_length=200)
+    owner = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name='home_owner', null=True, blank=True)
+    image = models.ImageField(upload_to='accommodations', null=True, blank=True)
+    address = models.ForeignKey(Address, on_delete=models.DO_NOTHING, related_name='accommodation_address' , null=True, blank=True)
+    description = RichTextUploadingField(null=True, blank=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Room(models.Model):
+    accommodation = models.ForeignKey(Accommodation, on_delete=models.SET_NULL, null=True, blank=True)
     room_number = models.CharField(max_length=100)
     image = models.ImageField(upload_to='rooms', null=True, blank=True)
     description = RichTextUploadingField(null=True, blank=True)
@@ -31,19 +43,7 @@ class Room(models.Model):
     current_status = models.IntegerField(choices=ROOM_STATUS_CHOICES, default=1)
 
     def __str__(self):
-        return self.room_number
-
-
-class Accommodation(models.Model):
-    name = models.CharField(max_length=200)
-    owner = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, blank=True)
-    rooms = models.ManyToManyField(Room)
-    image = models.ImageField(upload_to='accommodations', null=True, blank=True)
-    address = models.ForeignKey(Address, on_delete=models.DO_NOTHING, related_name='accommodation_address' , null=True, blank=True)
-    description = RichTextUploadingField(null=True, blank=True)
-
-    def __str__(self):
-        return self.name
+        return "{a} -> {b}".format(a=self.room_number, b=self.accommodation.name)
 
 
 class BookAccommodation(models.Model):
@@ -53,8 +53,8 @@ class BookAccommodation(models.Model):
     end_date = models.DateField()
     requested_date = models.DateTimeField(auto_now_add=True)
     total_bills = models.FloatField()
-    paid_bills = models.FloatField()
-    due_bills = models.FloatField()
+    paid_bills = models.FloatField(default=0)
+    due_bills = models.FloatField(default=0)
     payment_status = models.CharField(choices=PAYMENT_STATUS_CHOICES, default="Unpaid", max_length=20)
     status = models.IntegerField(choices=APPROVE_USER_STATUS, default=1)
 
@@ -62,9 +62,9 @@ class BookAccommodation(models.Model):
         return "{a} by {b} ".format(a=self.room.room_number, b=self.user.first_name)
 
 
-class AccommodationBill(models.Model):
+class AccommodationBillPayment(models.Model):
     bill = models.ForeignKey(BookAccommodation, on_delete=models.SET_NULL, related_name='bill', null=True, blank=True)
-    amount_received = models.FloatField()
+    payment_bdt = models.FloatField()
     date = models.DateTimeField(auto_now_add=True)
     note = models.TextField()
 

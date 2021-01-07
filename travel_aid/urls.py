@@ -26,7 +26,7 @@ urlpatterns = [
     path('ckeditor/', include('ckeditor_uploader.urls')),
     path('address/', include('address.urls')),
     path('service/', include('services.urls')),
-    path('auth2/', include('address.urls')),
+    path('system/', include('system.urls')),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
