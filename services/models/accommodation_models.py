@@ -8,12 +8,19 @@ AVAILABLE = 1
 PENDING = 2
 BOOKED = 3
 
+AC = 1
+Non_AC = 2
+
 ROOM_STATUS_CHOICES = (
     (AVAILABLE, "Available"),
     (PENDING, "Pending"),
     (BOOKED, "Booked")
 )
 
+ROOM_TYPE_CHOICES = (
+    ('AC', 'AC'),
+    ('Non AC', 'Non AC')
+)
 
 PAYMENT_STATUS_CHOICES = (
     ('Paid', 'Paid'),
@@ -40,6 +47,7 @@ class Room(models.Model):
     image = models.ImageField(upload_to='rooms', null=True, blank=True)
     description = RichTextUploadingField(null=True, blank=True)
     cost_per_day = models.FloatField(default=0)
+    room_type = models.CharField(choices=ROOM_TYPE_CHOICES, default='Non AC', max_length=20)
     current_status = models.IntegerField(choices=ROOM_STATUS_CHOICES, default=1)
 
     def __str__(self):
