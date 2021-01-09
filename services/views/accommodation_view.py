@@ -1,7 +1,10 @@
-from django.shortcuts import render, get_object_or_404
+import datetime
+
+from django.contrib import messages
+from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from address.models import District, Address
-from services.models.accommodation_models import Accommodation, Room
+from services.models.accommodation_models import Accommodation, Room, BookAccommodation
 from utils.filter import filter_by_address, filter_room
 
 
@@ -65,7 +68,6 @@ class AccommodationDetailView(View):
         return render(request, 'services/accommodation/details.html', context)
 
 
-
 class RoomDetailView(View):
     def get(self, request, pk):
         room_obj = get_object_or_404(Room, pk=pk)
@@ -73,3 +75,26 @@ class RoomDetailView(View):
             'room': room_obj,
         }
         return render(request, 'services/accommodation/room_details.html', context)
+
+    def post(self, request, pk):
+        room_obj = get_object_or_404(Room, pk=pk)
+        from_date = request.POST.get('from_date')  # Jan 9, 2021 [format specified in JS using datepicker ]
+        from_date = datetime.datetime.strptime(from_date, '%b %d, %Y').strftime('%Y-%m-%d')  # 2021-01-09
+        to_date = request.POST.get('to_date')
+        to_date = datetime.datetime.strptime(to_date, '%b %d, %Y').strftime('%Y-%m-%d')  # 2021-01-09
+        total_bills = request.POST.get('total_bills')
+        note = request.POST.get('note')
+
+        book_accommodation = BookAccommodation(user=request.user, room=room_obj, start_date=from_date, end_date=to_date,
+                                               total_bills=total_bills, note=note)
+        book_accommodation.save()
+        messages.success(request, 'Booking Request Submitted Successfully. ')
+        return redirect('services:bookings_url', user_id=request.user.id)
+
+
+class BookingsView(View):
+    def get(self, request, user_id):
+        context = {
+
+        }
+        return render(request, 'services/accommodation/bookings.html', context)

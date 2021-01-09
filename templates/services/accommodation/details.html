@@ -4,7 +4,7 @@
 
     <style>
         body{
-            background: rgba(153,147,163,0.99);
+            background: #fcf8e3;
         }
     </style>
 
@@ -13,16 +13,16 @@
     {% include 'navbar.html' %}
 
     <div class="container my-4">
-         <h3 class="text-light text-center" style="font-weight: bold"> Details of : {{ object.name }} </h3>
+         <h3 class="text-center" style="font-weight: bold"> Details of : {{ object.name }} </h3>
 
          <div id="image" class="my-3">
              <img class="img-fluid" src="{{ object.image.url }}" alt="Image Not Available.">
          </div>
 
         <div class="my-3">
-            <section id="rooms_info">
+            <section id="rooms_info" class="mt-5">
 
-                <h3 class="text-center text-light" style="font-weight: bold">Rooms Information</h3>
+                <h3 class="text-center" style="font-weight: bold">Rooms Information</h3>
 
                 <div class="row" style="margin-left: 120px;">
                     <div class="col-md-3" style="height: 100px; width: 70px; background: #1c7430">
@@ -40,9 +40,9 @@
                 </div>
             </section>
 
-            <section id="filter_room">
+            <section id="filter_room" class="my-5">
 
-                <h3 class="text-center text-light" style="font-weight: bold">Filter Rooms</h3>
+                <h3 class="text-center" style="font-weight: bold">Filter Rooms</h3>
 
                 <form method='post' action=""> {% csrf_token %}
                     <div class="row">
@@ -71,7 +71,7 @@
                 </form>
             </section>
 
-            <section id="room_list">
+            <section id="room_list" class="my-5">
                 {% if rooms.count == 0 %}
                     <div class="jumbotron">
                         No Rooms Found!!
@@ -100,6 +100,17 @@
                         </div>
                     </div>
                    {% endfor %}
+                </div>
+            </section>
+
+
+            <section id="accommodation_description" class="my-5">
+                <h3 class="text-center" style="font-weight: bold">Description</h3>
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ object.description | safe }}
+                    </div>
+
                 </div>
             </section>
 

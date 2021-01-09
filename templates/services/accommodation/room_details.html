@@ -1,10 +1,96 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    <h2 class="display-1 text-center">Room Details</h2>
+    <div class="container-fluid">
+        <div class="jumbotron">
+            <div class="row">
+                <div class="col-2"></div>
+                <div class="col-md-4">
+                    <ul>
+                        <li><h4 class="font-weight-bold">Room Number : {{ room.room_number }}</h4></li>
+                        <li><h4 class="font-weight-bold">Cost Per Day : {{ room.cost_per_day }} BDT</h4></li>
+                        <li><h4 class="font-weight-bold">Room Type : {{ room.room_type }}</h4></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                <ul>
+                    <li>
+                        <h4 class="font-weight-bold">Current Status : {% ifequal room.room_type 3 %} <span class="text-info">Booked</span> {% else %} <span class="text-success">Available</span> {% endifequal %}</h4>
+                    </li>
+                    <li><h4 class="font-weight-bold">Belongs to : <a class="font-weight-normal" href="{% url 'services:accommodation_detail_url' room.accommodation.id %}">{{ room.accommodation }}</a></h4></li>
+                    <button data-toggle="modal" data-target="#bookRoom" id="book_button" class="btn btn-success justify-content-center">Book</button>
+                </ul>
 
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div id="room_image">
+                <img height="500" class="w-100" src="{{ room.image.url }}" alt="Image Not Available.">
+            </div>
+
+            <div id="room_description" class="my-5">
+                {{ room.description | safe }}
+            </div>
+        </div>
+
+        <input type="hidden" id="cost_per_day" value="{{ room.cost_per_day }}">
+
+    </div>
+{% include 'services/accommodation/book_room_modal.html' %}
 {% endblock content %}
 
 {% block script %}
 
+    <script>
+    function  calculate_days(){
+        let start= $("#from_date").datepicker("getDate");
+        let end= $("#to_date").datepicker("getDate");
+        let days = (end- start) / (1000 * 60 * 60 * 24);
+        if(days < 0){
+            return "Invalid"
+        }
+        else{
+            return days
+        }
+    }
+    </script>
+
+    <script>
+        $(document).ready(function (){
+
+            $("#from_date").datepicker({
+                dateFormat: "M d, yy",
+                changeMonth: true,
+                changeYear: true,
+            })
+            $("#from_date").datepicker('setDate', 'today');
+
+            $("#to_date").datepicker({
+                dateFormat: "M d, yy",
+                changeMonth: true,
+                changeYear: true,
+                onSelect: function () {
+                  let days = calculate_days()
+                  if(days != 'Invalid'){
+                      $("#error_msg").text('')
+                      $("#request_btn").show()
+                      let cpd = $("#cost_per_day").val()
+                      let total_bills = Number(cpd) * (days+1)
+                      $("#total_bills").val(total_bills)
+                  }
+                  else{
+                      $("#error_msg").text('End Date Must be greater than Start Date')
+                      $("#request_btn").hide()
+                  }
+                }
+            })
+
+            $("#book_button").click(function (){
+                console.log("CLICKED. ")
+                $("form#bookRoom")[0].reset()
+            })
+        })
+    </script>
 {% endblock script %}

@@ -1,0 +1,48 @@
+<!-- Modal -->
+<div class="modal fade" id="bookRoom" role="dialog">
+<form action="{% url 'services:room_details' room.id %}" method="post"> {% csrf_token %}
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h4 class="modal-title">Choose Date Range</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-md-9">
+                        <label for="start_date" class="form-check-label">From Date</label>
+                        <input type="text" id="from_date" name="from_date" class="form-control" required>
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <div class="col-md-9">
+                        <label for="to_date" class="form-check-label">To Date <span style="font-size: 14px; font-weight: bold;" id="error_msg" class="text-danger"></span> </label>
+                        <input type="text" id="to_date" name="to_date" class="form-control" required>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="total_bills" class="form-check-label">Total Cost(BDT)</label>
+                        <input readonly type="text" id="total_bills" name="total_bills" class="form-control">
+                    </div>
+                </div>
+            <div class="row">
+                    <div class="col-md-12">
+                        <label for="start_date" class="form-check-label">Note (Optional)</label>
+                        <textarea name="note" class="form-control" id="note" cols="30" rows="5"></textarea>
+                    </div>
+                </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" id="request_btn" class="btn btn-success">Request</button>
+          <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+
+</form>
+</div>
