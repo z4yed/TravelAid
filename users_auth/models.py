@@ -52,7 +52,7 @@ class UserProfile(models.Model):
     profile_picture = models.ImageField(default='default.jpg', upload_to='profile_pics', null=True, blank=True)
     updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='update_profile', null=True, blank=True)
     description = RichTextUploadingField(null=True, blank=True)
-    expertise = models.ManyToManyField(Expertise)
+    expertise = models.ManyToManyField(Expertise, blank=True)
     hospital = models.ForeignKey(Hospital, on_delete=models.SET_NULL, related_name='hospital', null=True, blank=True)
 
     def __str__(self):

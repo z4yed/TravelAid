@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib import auth, messages
 
@@ -168,3 +168,47 @@ class RegistrationView(View):
             else:
                 messages.error(request, "Password didn't matched. ")
                 return redirect('authenticate:registration_url')
+
+
+class ProfileView(View):
+    def get(self, request, pk):
+        profile_obj = get_object_or_404(UserProfile, pk=pk)
+        districts = District.objects.all()
+        context = {
+            'profile': profile_obj,
+            'full_name': profile_obj.user.get_full_name(),
+            'districts': districts,
+        }
+        return render(request, 'users_auth/profile.html', context)
+
+    def post(self, request, pk):
+
+        data = request.POST
+        print("############", data)
+        profile_picture = request.FILES.get('profile_picture')
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
+        cell = data.get('cell')
+        address = data.get('address')
+        district = data.get('district')
+        zip_code = data.get('zip_code')
+        description = data.get('description')
+
+        profile_obj = get_object_or_404(UserProfile, pk=pk)
+        profile_obj.user.first_name = first_name
+        profile_obj.user.last_name = last_name
+        profile_obj.user.save()
+
+        profile_obj.address.address = address
+        profile_obj.address.district = District.objects.get(pk=district)
+        profile_obj.address.zip_code = zip_code
+        profile_obj.address.save()
+
+        profile_obj.cell = cell
+        if profile_picture:
+            profile_obj.profile_picture = profile_picture
+        profile_obj.description = description
+        profile_obj.save()
+
+        messages.success(request, 'Profile Updated Successfully. ')
+        return redirect('authenticate:profile_url', pk=profile_obj.id)
