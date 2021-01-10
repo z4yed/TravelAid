@@ -1,0 +1,65 @@
+<!-- Modal -->
+<div class="modal fade" id="payment" role="dialog">
+<form action="" method="post"> {% csrf_token %}
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h4 class="modal-title">Make Payment</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body ml-3">
+
+                <div class="row ml-1">
+                    <Label style="font-weight: bold">Payment Method : </Label>
+                    <div class="form-check form-check-inline ml-5">
+                      <input class="form-check-input" type="radio" name="payment_method" id="bkash" value="1" checked>
+                      <label class="form-check-label" for="bkash">bKash</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                      <input class="form-check-input" type="radio" name="payment_method" id="rocket" value="2">
+                      <label class="form-check-label" for="rocket">Rocket</label>
+                    </div>
+                </div>
+                <div class="row my-3">
+                    <div class="col-md-12">
+                        <label for="account_number" class="form-check-label">Account Number</label>
+                        <input type="text" minlength="11" maxlength="11" id="account_number" name="account_number" class="form-control" required>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="payment_bdt" class="form-check-label">Amount</label>
+                        <input type="text" id="payment_bdt" name="payment_bdt" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="tx_id" class="form-check-label">Transaction ID</label>
+                        <input type="text" id="tx_id" name="tx_id" class="form-control" required>
+                    </div>
+                </div>
+
+               <div class="row my-3">
+                    <div class="col-md-9">
+                        <label for="proof" class="form-check-label">Attach Payment Proof</label>
+                        <input type="file" id="proof" name="proof" class="form-control" required>
+                    </div>
+                </div>
+
+            <div class="row">
+                    <div class="col-md-12">
+                        <label for="start_date" class="form-check-label">Note (Optional)</label>
+                        <textarea name="note" class="form-control" id="note" cols="30" rows="5"></textarea>
+                    </div>
+                </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" id="request_btn" class="btn btn-success">Request</button>
+          <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+
+</form>
+</div>

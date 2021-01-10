@@ -49,7 +49,7 @@
                     <td>{{ booking.get_status_display }}</td>
                     <td>
                         {% if booking.paid_bills < booking.total_bills %}
-                            <button class="btn btn-success"><i class="fa fa-money"></i></button>
+                            <button data-toggle="modal" data-target="#payment" class="btn btn-success"><i class="fa fa-money"></i></button>
                         {% else %}
                             <a href="{% url 'services:print_invoice_url' booking.id %}" class="btn btn-success"><i class="fa fa-print"></i></a>
                         {% endif %}
@@ -67,6 +67,8 @@
         </div>
 
     </div>
+
+    {% include 'modals/payment_modal.html' %}
 {% endblock content %}
 
 {% block script %}
