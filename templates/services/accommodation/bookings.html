@@ -56,8 +56,9 @@
                         {% endif %}
                         <button data-toggle="modal" data-target="#bookingDetails{{ booking.id }}" class="btn btn-primary"><i class="fa fa-eye"></i></button>
                             {% include 'modals/view_booking_details.html' %}
-                        {% if booking.status == 1 %}
-                            <button class="btn btn-info"><i class="fa fa-edit"></i></button>
+                        {% if booking.payment_status == 'Unpaid' %}
+                            <button data-toggle="modal" data-target="#editBooking{{ booking.id }}" class="btn btn-info"><i class="fa fa-edit"></i></button>
+                            {% include 'modals/update_room_book.html' %}
                         {% endif %}
                         <button data-toggle="modal" data-target="#delete_booking{{ booking.id }}" class="btn btn-danger"><i class="fa fa-trash"></i></button>
                             {% include 'modals/booking_delete.html' %}
@@ -75,4 +76,94 @@
 {% endblock content %}
 
 {% block script %}
+
+    <script>
+    function  calculate_days(){
+        let start= $("#from_date").datepicker("getDate");
+        let end= $("#to_date").datepicker("getDate");
+        let days = (end- start) / (1000 * 60 * 60 * 24);
+        if(days < 0){
+            return "Invalid"
+        }
+        else{
+            return days
+        }
+    }
+    </script>
+
+    <script>
+        $(document).ready(function (){
+
+            $("#payment_bdt").on('keyup', function (){
+                let amount = Number($("#payment_bdt").val())
+                console.log(amount)
+                if(amount < 0 || isNaN(amount)){
+                    $("#error_msg").text("Amount Must Be Positive Number. ");
+                    $("#payment_bdt").css('border', '1px solid red');
+                    $("#payment_btn").hide()
+                }
+                else{
+                    $("#error_msg").text('');
+                    $("#payment_bdt").css('border', 'yellow')
+                    $("#payment_btn").show()
+                }
+
+            })
+
+            $("#from_date").datepicker({
+                onSelect:function (){
+                    let date = $("#from_date").datepicker('getDate')
+                    let today = new Date()
+                    today.setHours(0,0,0,0);
+                    if(date < today){
+                      $("#error_msg").text('You can\'t book from earlier than today. ')
+                      $("#to_date_div").hide()
+                      $("#update_btn").hide()
+                    }
+                    else{
+                      $("#to_date_div").show()
+                      $("#error_msg").text('')
+                      $("#update_btn").show()
+                    }
+                    let days = calculate_days()
+                    if(days != 'Invalid'){
+                      $("#error_msg2").text('')
+                      $("#update_btn").show()
+                      let cpd = $("#cost_per_day").val()
+                      let total_bills = Number(cpd) * (days+1)
+                      $("#total_bills").val(total_bills)
+                      }
+                      else{
+                          $("#error_msg2").text('End Date Must be greater than Start Date')
+                          $("#update_btn").hide()
+                      }
+                },
+                dateFormat: "M d, yy",
+                changeMonth: true,
+                changeYear: true,
+
+            })
+
+            $("#to_date").datepicker({
+                dateFormat: "M d, yy",
+                changeMonth: true,
+                changeYear: true,
+                onSelect: function () {
+                  let days = calculate_days()
+                  if(days != 'Invalid'){
+                      $("#error_msg2").text('')
+                      $("#update_btn").show()
+                      let cpd = $("#cost_per_day").val()
+                      let total_bills = Number(cpd) * (days+1)
+                      $("#total_bills").val(total_bills)
+                  }
+                  else{
+                      $("#error_msg2").text('End Date Must be greater than Start Date')
+                      $("#update_btn").hide()
+                  }
+                }
+            })
+
+        })
+    </script>
 {% endblock script %}

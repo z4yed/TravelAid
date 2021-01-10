@@ -31,7 +31,7 @@
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label for="payment_bdt" class="form-check-label">Amount</label>
+                        <label for="payment_bdt" class="form-check-label">Amount <span id='error_msg' class="text-danger"></span> </label>
                         <input type="text" id="payment_bdt" name="payment_bdt" class="form-control" required>
                     </div>
                     <div class="col-md-6">
@@ -58,7 +58,7 @@
           <input type="hidden" name="booking_id" name="booking_id" value="{{ booking.id }}">
 
         <div class="modal-footer">
-          <button type="submit" id="request_btn" class="btn btn-success">Submit</button>
+          <button type="submit" id="payment_btn" class="btn btn-success">Submit</button>
           <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
         </div>
       </div>

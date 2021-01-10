@@ -102,6 +102,26 @@ class BookingsView(View):
         }
         return render(request, 'services/accommodation/bookings.html', context)
 
+    def post(self, request, booking_id):
+        booking_obj = get_object_or_404(BookAccommodation, pk=booking_id)
+
+        data = request.POST
+        from_date = data.get('from_date')
+        from_date = datetime.datetime.strptime(from_date, '%b %d, %Y').strftime('%Y-%m-%d')  # 2021-01-09
+        to_date = data.get('to_date')
+        to_date = datetime.datetime.strptime(to_date, '%b %d, %Y').strftime('%Y-%m-%d')  # 2021-01-09
+        total_bills = data.get('total_bills')
+        note = data.get('note')
+
+        booking_obj.start_date = from_date
+        booking_obj.end_date = to_date
+        booking_obj.total_bills = total_bills
+        booking_obj.note = note
+        booking_obj.save()
+        messages.success(request, 'Booking Information Updated Successfully. ')
+
+        return redirect('services:bookings_url', user_id=booking_obj.user.id)
+
 
 class DownloadInvoice(View):
     def get(self, request, booking_id, *args, **kwargs):
