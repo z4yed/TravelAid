@@ -9,5 +9,6 @@ urlpatterns = [
     path('accommodation/<int:pk>/', accommodation_views.AccommodationDetailView.as_view(), name='accommodation_detail_url'),
     path('room/<int:pk>/', accommodation_views.RoomDetailView.as_view(), name='room_details'),
     path('bookings/<int:user_id>/', accommodation_views.BookingsView.as_view(), name='bookings_url'),
+    path('print_invoice/<int:booking_id>/', accommodation_views.DownloadInvoice.as_view(), name='print_invoice_url'),
     path('hospitals/', hospital_views.HospitalList.as_view(), name='hospital_list_url'),
 ]

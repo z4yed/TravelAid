@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+    {% include 'navbar.html' %}
     <div class="container">
         {% if messages  %}
               {% for message in messages  %}
@@ -10,8 +11,61 @@
         {% endif %}
 
         <div class="jumbotron">
-            <h2 class="text-center">Your All Bookings. </h2>
+            {% if bookings.count == 0 %}
+                <h2 class="text-center">You haven't book any Room. Please, <a href="{% url 'services:accommodation_list_url' %}">Book One</a></h2>
+            {% else %}
+                <h2 class="text-center">Your All Bookings. </h2>
+            {% endif %}
         </div>
+
+        <div id="table">
+            <table class="table table-stripped">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Cottage Name</th>
+                      <th scope="col">Room Number</th>
+                      <th scope="col">Starting Date</th>
+                      <th scope="col">Ending Date</th>
+                      <th scope="col">Total Costs(BDT)</th>
+                      <th scope="col">Paid(BDT)</th>
+                      <th scope="col">Status</th>
+                      <th scope="col" class="text-center">Action</th>
+                    </tr>
+
+                  </thead>
+                  <tbody>
+
+
+                {% for booking in bookings %}
+                  <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td><a href="{% url 'services:accommodation_detail_url' booking.room.accommodation.id %}">{{ booking.room.accommodation.name }}</a></td>
+                    <td><a href="{% url 'services:room_details' booking.room.id %}">{{ booking.room.room_number }}</a></td>
+                    <td>{{ booking.start_date| date:"b d, Y"}}</td>
+                    <td>{{ booking.end_date | date:"b d, Y" }}</td>
+                    <td>{{ booking.total_bills}}</td>
+                    <td>{{ booking.paid_bills}}</td>
+                    <td>{{ booking.get_status_display }}</td>
+                    <td>
+                        {% if booking.paid_bills < booking.total_bills %}
+                            <button class="btn btn-success"><i class="fa fa-money"></i></button>
+                        {% else %}
+                            <a href="{% url 'services:print_invoice_url' booking.id %}" class="btn btn-success"><i class="fa fa-print"></i></a>
+                        {% endif %}
+                        <button class="btn btn-primary"><i class="fa fa-eye"></i></button>
+                        {% if booking.status == 1 %}
+                            <button class="btn btn-info"><i class="fa fa-edit"></i></button>
+                        {% endif %}
+                        <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                    </td>
+                  </tr>
+
+                {% endfor %}
+              </tbody>
+              </table>
+        </div>
+
     </div>
 {% endblock content %}
 

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Bill</title>
+
+      <style>
+    @page {
+        size: a4 portrait;
+        @frame header_frame {           /* Static Frame */
+            -pdf-frame-content: header_content;
+            left: 50pt; width: 512pt; top: 50pt; height: 40pt;
+        }
+        @frame content_frame {          /* Content Frame */
+            left: 50pt; width: 512pt; top: 90pt; height: 632pt;
+        }
+        @frame footer_frame {           /* Another static Frame */
+            -pdf-frame-content: footer_content;
+            left: 50pt; width: 512pt; top: 772pt; height: 20pt;
+        }
+    }
+</style>
+
+  </head>
+  <body>
+
+    <h1 style="color: #0E2231; text-align: center">INVOICE</h1>
+    <h1 style="color: #1d2124; text-align: center">Invoice # {{ invoice_obj.id }}<br>
+        Date of Receipt : {% now "jS F Y H:i" %} <br>
+        Balance Due : {{ invoice_obj.due_bills }} BDT
+    </h1>
+    <hr>
+
+    <h2>Bill From : </h2>
+    <h2 style="color: #0b2e13">{{ invoice_obj.user.get_full_name }}</h2>
+    <h2 style="color: #0b2e13">{{ invoice_obj.user.user_info.address }}</h2><br><br>
+
+    <h2>Bill To: </h2>
+    <h2 style="color: #0b2e13">{{ invoice_obj.room.accommodation.owner.get_full_name }}</h2>
+    <h2 style="color: #0b2e13">{{ invoice_obj.room.accommodation.owner.user_info.address }}</h2><br><br>
+
+    <table style="border: 1px solid black">
+        <tr style="padding: 5px;">
+            <th>Accommodation</th>
+            <th>Room</th>
+            <th>Duration</th>
+            <th>Total Cost(BDT)</th>
+            <th>Paid (BDT)</th>
+        </tr>
+        <tr style="text-align: center;padding: 5px;">
+            <td>{{ invoice_obj.room.accommodation.name }}</td>
+            <td>Room # {{ invoice_obj.room.room_number }} <br>
+                Cost/Day : {{ invoice_obj.room.cost_per_day }} BDT <br>
+                Room Type : {{ invoice_obj.room.room_type }}
+            </td>
+            <td> From : {{ invoice_obj.start_date | date }} <br>
+                 To : {{ invoice_obj.end_date | date }}
+            </td>
+            <td>{{ invoice_obj.total_bills }}</td>
+            <td>{{ invoice_obj.paid_bills }}</td>
+        </tr>
+    </table>
+
+    <hr>
+        <p style="text-align: center">{{ invoice_obj.note }}</p>
+    <hr>
+
+
+  </body>
+</html>

@@ -10,7 +10,7 @@
       <ul class="navbar-nav ml-auto">
         {% if user.is_authenticated %}
         <li class="nav-item">
-          <a class="nav-link" href="">Bookings</a>
+          <a class="nav-link" href="{% url 'services:bookings_url' request.user.id %}">Bookings</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'authenticate:profile_url' request.user.id %}">Profile</a>

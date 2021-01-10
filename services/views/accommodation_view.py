@@ -1,11 +1,13 @@
 import datetime
 
 from django.contrib import messages
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from address.models import District, Address
 from services.models.accommodation_models import Accommodation, Room, BookAccommodation
 from utils.filter import filter_by_address, filter_room
+from utils.print_invoice import render_to_pdf
 
 
 class AccommodationList(View):
@@ -94,7 +96,25 @@ class RoomDetailView(View):
 
 class BookingsView(View):
     def get(self, request, user_id):
+        bookings = BookAccommodation.objects.filter(user=request.user)
         context = {
-
+            'bookings': bookings,
         }
         return render(request, 'services/accommodation/bookings.html', context)
+
+
+class DownloadInvoice(View):
+    def get(self, request, booking_id, *args, **kwargs):
+        invoice_obj = get_object_or_404(BookAccommodation, pk=booking_id)
+
+        context = {
+            'invoice_obj': invoice_obj,
+        }
+
+        pdf = render_to_pdf('services/accommodation/pdf_template.html', context)
+
+        response = HttpResponse(pdf, content_type='application/pdf')
+        filename = "Invoice_%s.pdf" % (invoice_obj.id)
+        content = "attachment; filename='%s'" % (filename)
+        response['Content-Disposition'] = content
+        return response

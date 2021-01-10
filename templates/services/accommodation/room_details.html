@@ -38,7 +38,7 @@
         <input type="hidden" id="cost_per_day" value="{{ room.cost_per_day }}">
 
     </div>
-{% include 'services/accommodation/book_room_modal.html' %}
+{% include 'modals/book_room_modal.html' %}
 {% endblock content %}
 
 {% block script %}
@@ -61,6 +61,21 @@
         $(document).ready(function (){
 
             $("#from_date").datepicker({
+                onSelect:function (){
+                    let date = $("#from_date").datepicker('getDate')
+                    let today = new Date()
+                    today.setHours(0,0,0,0);
+                    if(date < today){
+                      $("#error_msg").text('You can\'t book from earlier than today. ')
+                      $("#to_date_div").hide()
+                      $("#request_btn").hide()
+                    }
+                    else{
+                      $("#to_date_div").show()
+                      $("#error_msg").text('')
+                      $("#request_btn").show()
+                    }
+                },
                 dateFormat: "M d, yy",
                 changeMonth: true,
                 changeYear: true,
@@ -74,21 +89,20 @@
                 onSelect: function () {
                   let days = calculate_days()
                   if(days != 'Invalid'){
-                      $("#error_msg").text('')
+                      $("#error_msg2").text('')
                       $("#request_btn").show()
                       let cpd = $("#cost_per_day").val()
                       let total_bills = Number(cpd) * (days+1)
                       $("#total_bills").val(total_bills)
                   }
                   else{
-                      $("#error_msg").text('End Date Must be greater than Start Date')
+                      $("#error_msg2").text('End Date Must be greater than Start Date')
                       $("#request_btn").hide()
                   }
                 }
             })
 
             $("#book_button").click(function (){
-                console.log("CLICKED. ")
                 $("form#bookRoom")[0].reset()
             })
         })
