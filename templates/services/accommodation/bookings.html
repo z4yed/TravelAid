@@ -23,7 +23,7 @@
                   <thead>
                     <tr>
                       <th scope="col">#</th>
-                      <th scope="col">Cottage Name</th>
+                      <th scope="col">Cottage</th>
                       <th scope="col">Room Number</th>
                       <th scope="col">Starting Date</th>
                       <th scope="col">Ending Date</th>
@@ -49,7 +49,8 @@
                     <td>{{ booking.get_status_display }}</td>
                     <td>
                         {% if booking.paid_bills < booking.total_bills %}
-                            <button data-toggle="modal" data-target="#payment" class="btn btn-success"><i class="fa fa-money"></i></button>
+                            <button data-toggle="modal" data-target="#payment{{ booking.id }}" class="btn btn-success"><i class="fa fa-money"></i></button>
+                            {% include 'modals/payment_modal.html' %}
                         {% else %}
                             <a href="{% url 'services:print_invoice_url' booking.id %}" class="btn btn-success"><i class="fa fa-print"></i></a>
                         {% endif %}
@@ -68,7 +69,7 @@
 
     </div>
 
-    {% include 'modals/payment_modal.html' %}
+
 {% endblock content %}
 
 {% block script %}

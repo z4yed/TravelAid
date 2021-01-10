@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 from address.models import District, Address
-from services.models.accommodation_models import Accommodation, Room, BookAccommodation
+from services.models.accommodation_models import Accommodation, Room, BookAccommodation, AccommodationBillPayment
 from utils.filter import filter_by_address, filter_room
 from utils.print_invoice import render_to_pdf
 
@@ -118,3 +118,39 @@ class DownloadInvoice(View):
         content = "attachment; filename='%s'" % (filename)
         response['Content-Disposition'] = content
         return response
+
+
+class AccommodationPaymentView(View):
+    def post(self, request, booking_id):
+        data = request.POST
+        booking_id = data.get('booking_id')
+        bill_obj = get_object_or_404(BookAccommodation, pk=int(booking_id))
+        payment_method = data.get('payment_method')
+        account_number = data.get('account_number')
+        payment_bdt = data.get('payment_bdt')
+        tx_id = data.get('tx_id')
+        proof = request.FILES.get('proof')
+        note = data.get('note')
+
+        accommodation_bill = AccommodationBillPayment(bill=bill_obj, payment_bdt=payment_bdt, transaction_id=tx_id,
+                                                      payment_provider=payment_method, account_number=account_number,
+                                                      proof=proof, note=note)
+        accommodation_bill.save()
+        messages.success(request, 'BDT {a} Payment Successful. '.format(a=payment_bdt))
+
+        bill_obj.paid_bills += float(payment_bdt)
+        bill_obj.due_bills = bill_obj.total_bills - bill_obj.paid_bills
+
+        if bill_obj.total_bills == bill_obj.paid_bills:
+            bill_obj.payment_status = 'Paid'
+        elif 0 < bill_obj.due_bills < bill_obj.total_bills:
+            bill_obj.payment_status = 'Partially Paid'
+        elif bill_obj.due_bills == bill_obj.total_bills:
+            bill_obj.payment_status = 'Unpaid'
+        else:
+            bill_obj.payment_status = 'Over Paid'
+        bill_obj.save()
+        return redirect('services:bookings_url', user_id=bill_obj.user.id)
+
+
+

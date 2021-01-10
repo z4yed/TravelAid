@@ -1,6 +1,6 @@
 <!-- Modal -->
-<div class="modal fade" id="payment" role="dialog">
-<form action="" method="post"> {% csrf_token %}
+<div class="modal fade" id="payment{{ booking.id }}" role="dialog">
+<form action="{% url 'services:make_accommodation_payment_url' booking.id %}" method="post" enctype="multipart/form-data"> {% csrf_token %}
     <div class="modal-dialog">
 
       <!-- Modal content-->
@@ -11,7 +11,7 @@
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         <div class="modal-body ml-3">
-
+                <h6 class="font-weight-bold text-center my-3">Make Payment To : {{ booking.room.accommodation.owner.user_info.cell }}</h6>
                 <div class="row ml-1">
                     <Label style="font-weight: bold">Payment Method : </Label>
                     <div class="form-check form-check-inline ml-5">
@@ -54,8 +54,11 @@
                     </div>
                 </div>
         </div>
+
+          <input type="hidden" name="booking_id" name="booking_id" value="{{ booking.id }}">
+
         <div class="modal-footer">
-          <button type="submit" id="request_btn" class="btn btn-success">Request</button>
+          <button type="submit" id="request_btn" class="btn btn-success">Submit</button>
           <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
         </div>
       </div>
