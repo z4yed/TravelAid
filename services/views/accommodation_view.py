@@ -88,7 +88,7 @@ class RoomDetailView(View):
         note = request.POST.get('note')
 
         book_accommodation = BookAccommodation(user=request.user, room=room_obj, start_date=from_date, end_date=to_date,
-                                               total_bills=total_bills, note=note)
+                                               total_bills=total_bills, due_bills=total_bills, note=note)
         book_accommodation.save()
         messages.success(request, 'Booking Request Submitted Successfully. ')
         return redirect('services:bookings_url', user_id=request.user.id)

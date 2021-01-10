@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block style %}
+
+    <style>
+        body{
+            background: #fcf8e3;
+        }
+    </style>
+
+{% endblock %}
+{% block content %}
+    {% include 'navbar.html' %}
+
+    <div class="container my-4">
+         <h3 class="text-center" style="font-weight: bold"> Details of : {{ hospital.name }} </h3>
+
+         <div id="image" class="my-3">
+             <img class="img-fluid" src="{{ hospital.image.url }}" alt="Image Not Available.">
+         </div>
+
+        <div class="my-3">
+            <section id="rooms_info" class="mt-5">
+
+                <h3 class="text-center" style="font-weight: bold">Hospital Information</h3>
+
+                <div class="row" style="margin-left: 120px;">
+                    <div class="col-md-3" style="height: 100px; width: 70px; background: #1c7430">
+                        <h2 class="text-center">Total Doctors</h2>
+                        <h3 class="text-center">2134</h3>
+                    </div>
+                </div>
+            </section>
+
+            <section id="filter_doctors" class="my-5">
+
+                <h3 class="text-center" style="font-weight: bold">Filter Doctors</h3>
+
+                <form method='post' action=""> {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-4">
+                            <select id='room_status' name='room_status' class="form-control">
+                                <option value='' selected>Select Status</option>
+                                <option value="1">Available</option>
+                                <option value="3">Booked</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <select id='room_type' name='room_type' class="form-control">
+                                <option value='' selected>Select Type</option>
+                                <option value="AC">AC</option>
+                                <option value="Non AC">Non AC</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
+                            <input type="submit" class="btn btn-light text-dark" id="search_submit">
+                        </div>
+                    </div>
+
+                </form>
+            </section>
+
+            <section id="room_list" class="my-5">
+                {% if rooms.count == 0 %}
+                    <div class="jumbotron">
+                        No Doctors Found!!
+                    </div>
+                {% endif %}
+                <div class="row mt-3">
+                   {% for room in rooms %}
+                       <div class="col-lg-4">
+                        <div class="card" style="background: #f7f7f7">
+                            <div class="card-header">
+                                <h5 class="text-center" style="font-weight: bold">{{ room.room_number }}</h5>
+                                <h6 class="text-center" style="font-weight: bold">{{ room.room_type }} | {{ room.cost_per_day }} BDT/Day</h6>
+                                {% ifequal room.room_status 3%}
+                                    <h6 class="small text-info text-center font-weight-bold">Booked</h6>
+                                {% else %}
+                                    <h6 class="small text-center text-success font-weight-bold">Available</h6>
+                                {% endifequal %}
+
+                            </div>
+                            <div class="card-body">
+                                <img style="height: 180px; width: 600px" src="{{ room.image.url }}" alt="Image Not Available" class="img-fluid">
+                            </div>
+                            <div class="card-footer">
+                                <a href="" type="button" class="btn btn-primary btn-block">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                   {% endfor %}
+                </div>
+            </section>
+
+
+            <section id="accommodation_description" class="my-5">
+                <h3 class="text-center" style="font-weight: bold">Description</h3>
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ hospital.description | safe }}
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+    </div>
+
+
+{% endblock content %}
+
+{% block script %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function (event) {
+            var scrollpos = sessionStorage.getItem('scrollpos');
+            if (scrollpos) {
+                window.scrollTo(0, scrollpos);
+                sessionStorage.removeItem('scrollpos');
+            }
+        });
+
+        window.addEventListener("beforeunload", function (e) {
+            sessionStorage.setItem('scrollpos', window.scrollY);
+        });
+
+        $(window).blur(function(){
+            sessionStorage.clear();
+        });
+    </script>
+{% endblock script %}

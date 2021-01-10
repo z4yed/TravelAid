@@ -47,9 +47,10 @@ class Appointment(models.Model):
     date = models.DateField()
     description = RichTextUploadingField(null=True, blank=True)
     status = models.IntegerField(choices=APPOINTMENT_STATUS, default=1)
+    doctors_note = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return "{a} --> {b}".format(a=self.patient.first_name, b=self.doctor.first_name)
+        return "P:{a} --> D:{b}".format(a=self.patient.first_name, b=self.doctor.first_name)
 
 
 class AppointmentBill(models.Model):
@@ -69,6 +70,7 @@ class AppointmentBillPayment(models.Model):
     payment_bdt = models.FloatField()
     date = models.DateTimeField(auto_now_add=True)
     notes = models.TextField(null=True, blank=True)
+    proof = models.FileField(upload_to='doctors_payments', null=True, blank=True)
 
     def __str__(self):
         return "Payment for : {a}".format(a=self.bill)

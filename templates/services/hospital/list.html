@@ -2,56 +2,70 @@
 {% load static %}
 {% block content %}
 
-<div class="container">
+    {% include 'navbar.html' %}
+
+<div class="container-fluid">
 	<div class="bg-success">
 		<h2 class="text-center">
 			Search Nearest Hospitals
 		</h2>
 		<hr>
 	</div>
-	<div class="mt-5">
-		<form method='get' action="">
-				<div class="mt-1">
-					Enter Location :  <input type="text" name="location" placeholder=""><br>
-				</div>
-				<div class="mt-2">
-					Select District :
-					<select id='district' name='district'>
-						<option value='' selected>--Select--</option>
+	<div class="my-5">
+		<form method="post" id="accommodation_filter_form" > {% csrf_token %}
+            <div class="row">
+                <div class="col-md-4">
+					<input type="text" name="location" placeholder="Enter Location" id="location" class="form-control">
+                </div>
+                <div class="col-md-4">
+                    <select id='district' name='district' class="form-control">
+						<option value='' selected>Select District</option>
+                        {% for district in districts %}
+                            <option value="{{ district.id }}">{{ district.name }}</option>
+                        {% endfor %}
 					</select>
-				</div>
+                </div>
+                <div class="col-md-2">
+                    <input type="text" name="zip_code" placeholder="Zip Code" maxlength="4" id="zip_code" class="form-control">
+                </div>
+                <div class="col-md-2">
+                    <input type="submit" class="btn btn-outline-info" id="search_submit">
+                </div>
+            </div>
 
-				<div class="mt-2">
-					Enter ZIP Code : <input type="text" name="zipcode" placeholder="4 digit /(optional)">
-				</div>
+		</form>
 
-				<input type="submit" class="btn btn-outline-info">
-			</form>
-
-		</div>
+    </div>
 
 
-		<section class="test jumbotron" id="services">
-			<div class="row mt-5">
+		<section class="jumbotron" id="hospital_section">
+			<div class="row mt-2">
 				<div class="col-lg-12">
-					<h2 class="text-center bg-dark text-light">Available Hospitals</h2>
+                    {% if hospitals.count == 0 %}
+                        <h2 class="text-center font-weight-bold">No Hospital Found! </h2>
+                    {% else %}
+                        <h2 class="text-center font-weight-bold">Available Hospitals</h2>
+                    {% endif %}
+
 				</div>
 			</div>
 			<div class="row mt-3">
-				<div class="col-lg-4">
+               {% for hospital in hospitals %}
+                   <div class="col-lg-4">
 					<div class="card">
 						<div class="card-header">
-							<h5 class="text-center">TTT</h5>
-							<h6 class="text-center">LOC</h6>
+							<h5 class="text-center">{{ hospital.name }}</h5>
+							<h6 class="text-center">{{ hospital.address.get_full_address }}</h6>
 						</div>
 						<div class="card-body">
-							<img style="height: 220px; width: 830px" src="" alt="Image Not Available" class="img-fluid">
+							<img style="height: 220px; width: 830px" src="{{ hospital.image.url }}" alt="Image Not Available" class="img-fluid">
 						</div>
 						<div class="card-footer">
-							<a href="" type="button" class="btn btn-primary btn-block">View Details</a>
+							<a href="{% url 'services:hospital_details_url'  hospital.id %}" type="button" class="btn btn-primary btn-block">View Details</a>
 						</div>
 					</div>
 				</div>
+               {% endfor %}
 			</div>
 		</section>
 	</div>

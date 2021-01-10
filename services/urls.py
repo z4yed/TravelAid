@@ -13,5 +13,10 @@ urlpatterns = [
     path('print_invoice/<int:booking_id>/', accommodation_views.DownloadInvoice.as_view(), name='print_invoice_url'),
     path('make_accommodation_payment/<int:booking_id>/', accommodation_views.AccommodationPaymentView.as_view(), name='make_accommodation_payment_url'),
     path('delete_booking/<int:booking_id>/', accommodation_views.BookingDeleteView.as_view(), name='delete_booking_url'),
+
+
     path('hospitals/', hospital_views.HospitalList.as_view(), name='hospital_list_url'),
+    path('hospital/<int:id>/', hospital_views.HospitalDetailsView.as_view(), name='hospital_details_url'),
+
+
 ]

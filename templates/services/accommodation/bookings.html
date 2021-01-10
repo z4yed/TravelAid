@@ -51,7 +51,8 @@
                         {% if booking.paid_bills < booking.total_bills %}
                             <button data-toggle="modal" data-target="#payment{{ booking.id }}" class="btn btn-success"><i class="fa fa-money"></i></button>
                             {% include 'modals/payment_modal.html' %}
-                        {% else %}
+                        {% endif %}
+                        {% if booking.status == 2 %}
                             <a href="{% url 'services:print_invoice_url' booking.id %}" class="btn btn-success"><i class="fa fa-print"></i></a>
                         {% endif %}
                         <button data-toggle="modal" data-target="#bookingDetails{{ booking.id }}" class="btn btn-primary"><i class="fa fa-eye"></i></button>
