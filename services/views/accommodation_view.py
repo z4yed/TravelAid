@@ -153,4 +153,10 @@ class AccommodationPaymentView(View):
         return redirect('services:bookings_url', user_id=bill_obj.user.id)
 
 
-
+class BookingDeleteView(View):
+    def get(self, request, booking_id):
+        booking_obj = get_object_or_404(BookAccommodation, pk=booking_id)
+        user = booking_obj.user
+        messages.success(request, 'Booking Deleted Successfully. ')
+        booking_obj.delete()
+        return redirect('services:bookings_url', user_id=user.id)

@@ -1,7 +1,7 @@
 <!-- Modal -->
 <div class="modal fade" id="payment{{ booking.id }}" role="dialog">
 <form action="{% url 'services:make_accommodation_payment_url' booking.id %}" method="post" enctype="multipart/form-data"> {% csrf_token %}
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
 
       <!-- Modal content-->
       <div class="modal-content">

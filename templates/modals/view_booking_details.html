@@ -1,0 +1,36 @@
+<!-- Modal -->
+<div class="modal fade" id="bookingDetails{{ booking.id }}" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h4 class="modal-title">Details</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+
+            <ol type="I" class="text-center">
+                <li class="font-weight-bold"><h5>Cottage : {{ booking.room.accommodation.name }}</h5></li>
+                <li class="font-weight-bold"><h5>Room : {{ booking.room.room_number }}</h5></li>
+                <li class="font-weight-bold"><h5>Cost/Day : {{ booking.room.cost_per_day }} BDT</h5></li>
+                <li class="font-weight-bold"><h5>Requested On : {{ booking.requested_date | date }}</h5></li>
+                <li class="font-weight-bold"><h5>Start Date : {{ booking.start_date }}</h5></li>
+                <li class="font-weight-bold"><h5>End Date : {{ booking.end_date }}</h5></li>
+                <li class="font-weight-bold"><h5>Total Bills : {{ booking.total_bills }} BDT</h5></li>
+                <li class="font-weight-bold"><h5>Paid Bills : {{ booking.paid_bills }} BDT</h5></li>
+                <li class="font-weight-bold"><h5>Due Bills : {{ booking.due_bills }} BDT</h5></li>
+                <li class="font-weight-bold"><h5>Payment Status : {{ booking.payment_status }}</h5></li>
+                <li class="font-weight-bold"><h5>Note : {{ booking.note }}</h5></li>
+
+            </ol>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+
+</div>

@@ -54,11 +54,13 @@
                         {% else %}
                             <a href="{% url 'services:print_invoice_url' booking.id %}" class="btn btn-success"><i class="fa fa-print"></i></a>
                         {% endif %}
-                        <button class="btn btn-primary"><i class="fa fa-eye"></i></button>
+                        <button data-toggle="modal" data-target="#bookingDetails{{ booking.id }}" class="btn btn-primary"><i class="fa fa-eye"></i></button>
+                            {% include 'modals/view_booking_details.html' %}
                         {% if booking.status == 1 %}
                             <button class="btn btn-info"><i class="fa fa-edit"></i></button>
                         {% endif %}
-                        <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                        <button data-toggle="modal" data-target="#delete_booking{{ booking.id }}" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                            {% include 'modals/booking_delete.html' %}
                     </td>
                   </tr>
 
