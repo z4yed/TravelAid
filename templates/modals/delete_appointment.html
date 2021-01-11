@@ -1,0 +1,22 @@
+<!-- Modal -->
+<div class="modal fade" id="delete_appointment{{ appointment.id }}" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h6 class="modal-title">Are You Sure to Delete the Following Appointment?</h6>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+           <p class="lead">Appointment Request to Doctor : {{ appointment.doctor.get_full_name }} </p>
+        </div>
+        <div class="modal-footer">
+            <a href="{% url 'services:delete_appointment_url' appointment.id %}" class="btn btn-danger">Delete</a>
+          <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+
+</div>

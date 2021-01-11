@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block style %}
+
+    <style>
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+
+{% endblock style %}
+
+{% block content %}
+    {% include 'navbar.html' %}
+
+    <div class="container-fluid">
+        <div class="jumbotron">
+            <img src="{{ doctor.user_info.profile_picture.url }}" height="150" width="150" alt="Image Not Available." class="center rounded-circle">
+            <h2 class="text-center font-weight-bold">{{ doctor.get_full_name }} </h2>
+            <h4 class="text-center font-weight-bold"> Cell : {{ doctor.user_info.cell }} </h4>
+            <h4 class="text-center font-weight-bold">Permanent Address : {{ doctor.user_info.address.get_full_address }}</h4>
+
+            <button id="appointment_button" data-toggle="modal" data-target="#reqAppointment{{ doctor.id }}"
+                    class="center text-center btn btn-success">Request Appointment</button>
+            {% include 'modals/request_appointment.html' %}
+
+        </div>
+
+        <div class="container-fluid" style="background: #e6deed">
+
+            <div class="info">
+
+                <h5 class="font-weight-bold">Expertize In: </h5>
+                <ul type="I">
+                    {% for expertise in expertises %}
+                        <li class="font-weight-bold">{{ expertise.name }}</li>
+                    {% endfor %}
+                </ul>
+
+                <div class="container">
+                    {{ doctor.user_info.description | safe }}
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock content %}
+
+{% block script %}
+
+    <script>
+    $(document).ready(function (){
+
+        $("#appointment_date").datepicker({
+            onSelect:function (){
+                let date = $("#appointment_date").datepicker('getDate')
+                let today = new Date()
+                today.setHours(0,0,0,0);
+                if(date < today){
+                  $("#error_msg").text('Appointment Date Can\'t be earlier than today. ')
+                  $("#submit_appointment_btn").hide()
+                }
+                else{
+                  $("#error_msg").text('')
+                  $("#submit_appointment_btn").show()
+                }
+            },
+            dateFormat: "M d, yy",
+            changeMonth: true,
+            changeYear: true,
+        })
+    })
+
+    </script>
+
+{% endblock script %}

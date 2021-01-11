@@ -46,7 +46,6 @@ from system.models import Expertise                    # display Import Error
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_info')
-    full_name = models.CharField(max_length=100, null=True, blank=True)
     cell = models.CharField(max_length=11, null=True, blank=True)
     address = models.ForeignKey(Address, on_delete=models.SET_NULL,  related_name='user_address', null=True, blank=True)
     profile_picture = models.ImageField(default='default.jpg', upload_to='profile_pics', null=True, blank=True)

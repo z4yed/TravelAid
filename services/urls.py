@@ -17,6 +17,9 @@ urlpatterns = [
 
     path('hospitals/', hospital_views.HospitalList.as_view(), name='hospital_list_url'),
     path('hospital/<int:id>/', hospital_views.HospitalDetailsView.as_view(), name='hospital_details_url'),
-
-
+    path('hospital/doctor/<int:doctor_id>', hospital_views.DoctorDetailsView.as_view(), name='doctor_details_url'),
+    path('request_appointments/<int:doctor_id>/', hospital_views.DoctorDetailsView.as_view(), name='request_appointments_url'),
+    path('my_appointments/<int:user_id>/', hospital_views.UserAppointmentView.as_view(), name='user_appointments_url'),
+    path('edit_appointment/<int:appointment_id>/', hospital_views.UserAppointmentView.as_view(), name='edit_appointment_url'),
+    path('delete_appointment/<int:appointment_id>/', hospital_views.DeleteAppointmentView.as_view(), name='delete_appointment_url'),
 ]

@@ -47,10 +47,11 @@ class Appointment(models.Model):
     date = models.DateField()
     description = RichTextUploadingField(null=True, blank=True)
     status = models.IntegerField(choices=APPOINTMENT_STATUS, default=1)
-    doctors_note = models.TextField(null=True, blank=True)
+    doctors_note = RichTextUploadingField(null=True, blank=True)
+    requested_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return "P:{a} --> D:{b}".format(a=self.patient.first_name, b=self.doctor.first_name)
+        return "P:{a} --> D:{b}".format(a=self.patient.get_full_name(), b=self.doctor.get_full_name() )
 
 
 class AppointmentBill(models.Model):

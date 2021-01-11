@@ -24,12 +24,14 @@
 
                 <h3 class="text-center" style="font-weight: bold">Hospital Information</h3>
 
-                <div class="row" style="margin-left: 120px;">
-                    <div class="col-md-3" style="height: 100px; width: 70px; background: #1c7430">
-                        <h2 class="text-center">Total Doctors</h2>
-                        <h3 class="text-center">2134</h3>
+                <div style="justify-content: center">
+                    <div class="mx-auto" style="height: 160px; width: 300px; background: rgba(108,163,40,0.99)">
+                        <h3 class="text-center font-weight-bold"><br>Doctors</h3>
+                        <hr>
+                         <h2 class="text-center font-weight-bold"> {{ hospital.doctors.all.count }}  </h2>
                     </div>
                 </div>
+
             </section>
 
             <section id="filter_doctors" class="my-5">
@@ -61,31 +63,31 @@
                 </form>
             </section>
 
-            <section id="room_list" class="my-5">
+            <section id="doctors_list" class="my-5">
                 {% if rooms.count == 0 %}
                     <div class="jumbotron">
                         No Doctors Found!!
                     </div>
                 {% endif %}
                 <div class="row mt-3">
-                   {% for room in rooms %}
+                   {% for doctor in doctors %}
                        <div class="col-lg-4">
                         <div class="card" style="background: #f7f7f7">
                             <div class="card-header">
-                                <h5 class="text-center" style="font-weight: bold">{{ room.room_number }}</h5>
-                                <h6 class="text-center" style="font-weight: bold">{{ room.room_type }} | {{ room.cost_per_day }} BDT/Day</h6>
-                                {% ifequal room.room_status 3%}
-                                    <h6 class="small text-info text-center font-weight-bold">Booked</h6>
+                                <h5 class="text-center" style="font-weight: bold">{{ doctor.get_full_name }}</h5>
+                                <h6 class="text-center" style="font-weight: bold">{{ doctor.user_info.cell }} </h6>
+                                {% if doctor.user_status != 2%}
+                                    <h6 class="small text-danger text-center font-weight-bold">Not Verified</h6>
                                 {% else %}
-                                    <h6 class="small text-center text-success font-weight-bold">Available</h6>
-                                {% endifequal %}
+                                    <h6 class="small text-center text-success font-weight-bold">Verified</h6>
+                                {% endif %}
 
                             </div>
                             <div class="card-body">
-                                <img style="height: 180px; width: 600px" src="{{ room.image.url }}" alt="Image Not Available" class="img-fluid">
+                                <img style="height: 180px; width: 600px" src="{{ doctor.user_info.profile_picture.url }}" alt="Image Not Available" class="img-fluid">
                             </div>
                             <div class="card-footer">
-                                <a href="" type="button" class="btn btn-primary btn-block">View Details</a>
+                                <a href="{% url 'services:doctor_details_url' doctor.id %}" type="button" class="btn btn-primary btn-block">View Details</a>
                             </div>
                         </div>
                     </div>
