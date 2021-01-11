@@ -7,6 +7,17 @@
    </button>
 
     <div class="navbar-collapse collapse w-100 order-3 dual-collapse2 ml-auto">
+
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'services:accommodation_list_url' %}">Accommodations</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'services:hospital_list_url' %}">Hospitals</a>
+        </li>
+    </ul>
+
       <ul class="navbar-nav ml-auto">
         {% if user.is_authenticated %}
         <li class="nav-item">
