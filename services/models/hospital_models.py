@@ -56,22 +56,11 @@ class Appointment(models.Model):
 
 class AppointmentBill(models.Model):
     appointment = models.ForeignKey(Appointment, related_name='appointment', on_delete=models.SET_NULL, null=True, blank=True)
-    total_bills = models.FloatField()
-    due_bills = models.FloatField(default=0)
-    paid_bills = models.FloatField(default=0)
+    room_charge = models.FloatField(default=0)
+    medicine_charge = models.FloatField(default=0)
+    doctors_charge = models.FloatField(default=0)
+    others_charge = models.FloatField(default=0)
     notes = models.TextField()
-    payment_status = models.CharField(choices=PAYMENT_STATUS_CHOICES, default='Unpaid', max_length=20)
 
     def __str__(self):
         return "Bill ID : {a}".format(a=str(self.id))
-
-
-class AppointmentBillPayment(models.Model):
-    bill = models.ForeignKey(AppointmentBill, related_name='appointment_bill', on_delete=models.SET_NULL, null=True, blank=True)
-    payment_bdt = models.FloatField()
-    date = models.DateTimeField(auto_now_add=True)
-    notes = models.TextField(null=True, blank=True)
-    proof = models.FileField(upload_to='doctors_payments', null=True, blank=True)
-
-    def __str__(self):
-        return "Payment for : {a}".format(a=self.bill)

@@ -1,0 +1,102 @@
+{% extends 'doctor_base.html' %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="{% static 'fa/css/font-awesome.css' %}">
+
+<div class="container">
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="home-tab" data-toggle="tab" href="#pending" role="tab" aria-controls="home" aria-selected="true">Pending
+            <span class="badge badge-pill badge-success"><strong>{{ pending_appointments.count }}</strong></span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="profile-tab" data-toggle="tab" href="#approved" role="tab" aria-controls="profile" aria-selected="false">Approved
+            <span class="badge badge-pill badge-success"><strong>{{ approved_appointments.count }}</strong></span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#rejected" role="tab" aria-controls="contact" aria-selected="false">Rejected
+            <span class="badge badge-pill badge-success"><strong>{{ rejected_appointments.count }}</strong></span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="contact-tab" data-toggle="tab" href="#released" role="tab" aria-controls="contact" aria-selected="false">Released
+            <span class="badge badge-pill badge-success"><strong>{{ released_appointments.count }}</strong></span>
+            </a>
+        </li>
+
+    </ul>
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="pending" role="tabpanel" aria-labelledby="home-tab">
+            <div class="container mt-5">
+                <div id="table">
+                <table class="table table-stripped">
+                      <thead>
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Patient</th>
+                          <th scope="col">Requested Date</th>
+                          <th scope="col">Appointment Date</th>
+                          <th scope="col">Current Status</th>
+                          <th scope="col" class="text-center">Action</th>
+                        </tr>
+
+                      </thead>
+                      <tbody>
+
+                     {% for appointment in pending_appointments %}
+
+                      <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ appointment.patient.get_full_name }}</td>
+                        <td>{{ appointment.requested_on | date:"b d, Y" }}</td>
+                        <td>{{ appointment.date| date:"b d, Y"}}</td>
+                        <td>{{ appointment.get_status_display }}</td>
+                        <td>
+                            {% if appointment.status == 1 %}
+                                <button data-toggle="modal" data-target="#appointmentDetails{{ appointment.id }}" class="btn btn-info"><i class="fa fa-eye fa-xs" ></i></button>
+                                {% include 'modals/appointment_details.html' %}
+                                <button data-toggle="modal" data-target="#approveAppointment{{ appointment.id }}" class="btn btn-success"><i class="fa fa-check" ></i></button>
+                                {% include 'modals/approve_appointment.html' %}
+                                <button data-toggle="modal" data-target="" class="btn btn-danger"><i class="fa fa-ban" ></i></button>
+
+                            {% endif %}
+                        </td>
+                      </tr>
+                   {% endfor %}
+
+                  </tbody>
+                  </table>
+            </div>
+
+            </div>
+        </div>
+        <div class="tab-pane fade" id="approved" role="tabpanel" aria-labelledby="profile-tab">profile tab</div>
+        <div class="tab-pane fade" id="rejected" role="tabpanel" aria-labelledby="contact-tab">contact tab</div>
+        <div class="tab-pane fade" id="released" role="tabpanel" aria-labelledby="contact-tab">contact tab</div>
+    </div>
+</div>
+
+
+{% endblock content %}
+
+{% block script %}
+<script src="{% static 'fa/js/fontawesome.js' %}"></script>
+    <script>
+    $(document).ready(function(){
+        $('a[data-toggle="tab"]').on('click.bs.tab', function(e) {
+            localStorage.setItem('activeTab', $(e.target).attr('href'));
+        });
+        var activeTab = localStorage.getItem('activeTab');
+        if(activeTab){
+            $('#myTab a[href="' + activeTab + '"]').tab('show');
+        }
+    });
+    </script>
+{% endblock %}

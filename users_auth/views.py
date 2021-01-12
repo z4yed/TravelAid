@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib import auth, messages
 
-from services.models import Hospital
+from services.models import Hospital, Appointment
 from system.models import Expertise
 from .models import User, UserProfile
 from address.models import District, Address
@@ -27,9 +27,17 @@ class AdminDashboardView(View):
 
 
 class DoctorDashboardView(View):
-    def get(self, request):
+    def get(self, request, doctor_id):
+        doctor_obj = get_object_or_404(User, pk=doctor_id)
+        pending_appointments = Appointment.objects.filter(doctor=doctor_obj, status=1)
+        confirmed_appointments = Appointment.objects.filter(doctor=doctor_obj, status=2)
+        rejected_appointments = Appointment.objects.filter(doctor=doctor_obj, status=3)
+        total_appointments = Appointment.objects.filter(doctor=doctor_obj)
         context = {
-
+            'pending_appointments': pending_appointments,
+            'confirmed_appointments': len(confirmed_appointments),
+            'rejected_appointments': len(rejected_appointments),
+            'total_appointments': len(total_appointments),
         }
         return render(request, 'dashboard/doctor_dashboard.html', context)
 
@@ -63,8 +71,6 @@ class LoginView(View):
         username = data.get('username')
         password = data.get('password')
 
-        print(">>>>>>>>>>>>>>>>..", username, password)
-
         user = auth.authenticate(request, username=username, password=password)
 
         if user is not None:
@@ -73,7 +79,7 @@ class LoginView(View):
                 if user.is_staff:
                     return redirect('authenticate:admin_dashboard_url')
                 elif user.is_doctor:
-                    return redirect('authenticate:doctor_dashboard_url')
+                    return redirect('authenticate:doctor_dashboard_url', doctor_id=user.id)
                 elif user.is_police:
                     return redirect('authenticate:police_dashboard_url')
                 elif user.is_manager:
@@ -178,13 +184,13 @@ class ProfileView(View):
             'profile': profile_obj,
             'full_name': profile_obj.user.get_full_name(),
             'districts': districts,
+            'expertises': Expertise.objects.all(),
+            'profile_exp': profile_obj.expertise.all(),
         }
         return render(request, 'users_auth/profile.html', context)
 
     def post(self, request, pk):
-
         data = request.POST
-        print("############", data)
         profile_picture = request.FILES.get('profile_picture')
         first_name = data.get('first_name')
         last_name = data.get('last_name')
@@ -193,6 +199,8 @@ class ProfileView(View):
         district = data.get('district')
         zip_code = data.get('zip_code')
         description = data.get('description')
+
+
 
         profile_obj = get_object_or_404(UserProfile, pk=pk)
         profile_obj.user.first_name = first_name
@@ -210,5 +218,15 @@ class ProfileView(View):
         profile_obj.description = description
         profile_obj.save()
 
+        if request.user.is_doctor:
+            profile_obj.expertise.clear()
+            expertises = data.getlist('expertises')
+            for exp in expertises:
+                obj = Expertise.objects.get(pk=int(exp))
+                profile_obj.expertise.add(obj)
+
         messages.success(request, 'Profile Updated Successfully. ')
+        if profile_obj.user.is_doctor:
+            return redirect('authenticate:doctor_dashboard_url', doctor_id=profile_obj.user.id)
+
         return redirect('authenticate:profile_url', pk=profile_obj.id)

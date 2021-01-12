@@ -104,3 +104,35 @@ class DeleteAppointmentView(View):
         appointment.delete()
         messages.success(request, 'Appointment Deleted Successfully. ')
         return redirect('services:user_appointments_url', user_id=request.user.id)
+
+
+class ManageAppointmentsView(View):
+    def get(self, request, doctor_id):
+        doctor_obj = get_object_or_404(User, pk=doctor_id)
+        pending_appointments = Appointment.objects.filter(doctor=doctor_obj, status=1)
+        approved_appointments = Appointment.objects.filter(doctor=doctor_obj, status=2)
+        on_hold_appointments = Appointment.objects.filter(doctor=doctor_obj, status=4)
+        released_appointments = Appointment.objects.filter(doctor=doctor_obj, status=5)
+        rejected_appointments = Appointment.objects.filter(doctor=doctor_obj, status=3)
+        context = {
+            'pending_appointments': pending_appointments,
+            'approved_appointments': approved_appointments,
+            'on_hold_appointments': on_hold_appointments,
+            'released_appointments': released_appointments,
+            'rejected_appointments': rejected_appointments,
+        }
+        return render(request, 'doctors/appointment_manage.html', context)
+
+    def post(self, request, pending_id):
+        appointment_obj = get_object_or_404(Appointment, pk=pending_id)
+        data = request.POST
+
+        doctors_note = data.get('doctors_note')
+
+        appointment_obj.doctors_note = doctors_note
+        appointment_obj.status = 2
+        appointment_obj.save()
+        return redirect('services:manage_appointments_url', doctor_id=request.user.id)
+
+
+

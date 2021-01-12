@@ -2,7 +2,26 @@
 {% load static %}
 
 {% block content %}
-    {% include 'navbar.html' %}
+
+    {% if request.user.is_user %}
+        {% include 'navbar.html' %}
+    {% else %}
+
+          <div class="row text-center font-weight-bold bg-dark">
+                <div class="col-md-4">
+                    {% if request.user.is_doctor %}
+                         <a class="nav-link" href="{% url 'authenticate:doctor_dashboard_url' request.user.id %}">Dashboard</a>
+                    {% endif %}
+                    {% if request.user.id_manager %}
+                        <a class="nav-link" href="{% url 'authenticate:manager_dashboard_url' request.user.id %}">Dashboard</a>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    <h3 class="font-weight-bold">Your Profile </h3>
+                </div>
+          </div>
+
+    {% endif %}
 
     {% if messages  %}
           {% for message in messages  %}
@@ -93,9 +112,23 @@
                      </textarea>
                 </div>
             </div>
+
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <label for="expertises" class="form-check-label my-3 font-weight-bold">Your Expertises</label>
+                    <select name="expertises" id="expertises" class="form-control" multiple>
+                        {% for expertise in expertises %}
+                            <option value="{{ expertise.id }}" {% if expertise in profile_exp %} selected {% endif %} >{{ expertise.name }}</option>
+                        {% endfor %}
+
+                    </select>
+                </div>
+            </div>
+
+
         </div>
 
-        <button type="submit" class="btn btn-light text-dark">Submit</button>
+        <button type="submit" class="btn btn-light text-dark my-4">Submit</button>
 
         </form>
     </div>

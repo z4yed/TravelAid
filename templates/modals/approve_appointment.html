@@ -1,27 +1,20 @@
 <!-- Modal -->
-<div class="modal fade" id="reqAppointment{{ doctor.id }}" role="dialog">
-<form action="{% url 'services:request_appointments_url' doctor.id %}" method="post"> {% csrf_token %}
+<div class="modal fade" id="approveAppointment{{ appointment.id }}" role="dialog">
+<form action="{% url 'services:approve_appointmetn_url' appointment.id %}" method="post"> {% csrf_token %}
     <div class="modal-dialog modal-lg">
 
       <!-- Modal content-->
       <div class="modal-content">
 
         <div class="modal-header">
-          <h4 class="modal-title">Appointment Form</h4>
+          <h4 class="modal-title">Approve Appointment</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         <div class="modal-body">
-
-                <div class="row">
-                    <div class="col-md-6">
-                        <label for="appointment_date" class="form-check-label">Appointment Date <span style="font-size: 14px; font-weight: bold;" id="error_msg" class="text-danger"></span> </label>
-                        <input type="text" id="appointment_date" name="appointment_date" class="form-control" required>
-                    </div>
-                </div>
-                <div class="row my-3" id='to_date_div'>
+            <div class="row my-3">
                     <div class="col-md-12">
-                        <label for="problem_desc" class="form-check-label">Problem Description <span style="font-size: 14px; font-weight: bold;" id="error_msg2" class="text-danger"></span> </label>
-                        <textarea id="problem_desc" maxlength="2000" name="problem_desc" rows="50"
+                        <label for="doctors_note" class="form-check-label">Problem Description <span style="font-size: 14px; font-weight: bold;" id="error_msg2" class="text-danger"></span> </label>
+                        <textarea id="doctors_note{{ appointment.id }}" maxlength="2000" name="doctors_note" rows="50"
                                           data-processed="0"
                                           data-config='{"skin": "moono-lisa", "toolbar_Basic":
                               [["Source", "-", "Bold", "Italic", "Image"]],
@@ -44,7 +37,7 @@
                 </div>
         </div>
         <div class="modal-footer">
-          <button type="submit" id="submit_appointment_btn" class="btn btn-success">Request</button>
+          <button type="submit" id="approve_appointment_btn{{ appointment.id }}" class="btn btn-success">Approve</button>
           <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
         </div>
       </div>

@@ -22,6 +22,7 @@ class User(AbstractUser):
     is_doctor = models.BooleanField(default=False)
     is_police = models.BooleanField(default=False)
     is_manager = models.BooleanField(default=False)
+    is_user = models.BooleanField(default=False)
     user_status = models.IntegerField(choices=APPROVE_USER_STATUS, default=1)
 
     created = models.DateTimeField(auto_now_add=True)

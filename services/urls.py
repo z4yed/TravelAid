@@ -22,4 +22,8 @@ urlpatterns = [
     path('my_appointments/<int:user_id>/', hospital_views.UserAppointmentView.as_view(), name='user_appointments_url'),
     path('edit_appointment/<int:appointment_id>/', hospital_views.UserAppointmentView.as_view(), name='edit_appointment_url'),
     path('delete_appointment/<int:appointment_id>/', hospital_views.DeleteAppointmentView.as_view(), name='delete_appointment_url'),
+
+    # Doctor Controls
+    path('manage-appointments/<int:doctor_id>/', hospital_views.ManageAppointmentsView.as_view(), name='manage_appointments_url'),
+    path('approve-appointment/<int:pending_id>/', hospital_views.ManageAppointmentsView.as_view(), name='approve_appointmetn_url'),
 ]

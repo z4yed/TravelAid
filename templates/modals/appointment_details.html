@@ -20,7 +20,15 @@
                     <input class="form-control" type="text" value="{{ appointment.date | date:"b d, Y" }}" readonly>
                 </div>
             </div>
+
             <div class="row my-3">
+                <div class="col-md-6 my-3">
+                    <label for="doctor" class="form-check-label font-weight-bold my-3">Patient</label>
+                    <input class="form-control" type="text" value="{{ appointment.patient.get_full_name }}" readonly>
+                </div>
+            </div>
+
+            <div class="row my-2">
                 <div class="col-md-12 my-3">
                     <label for="doctor" class="form-check-label font-weight-bold my-3">Problem Description</label>
                     {{ appointment.description | safe }}
@@ -28,7 +36,7 @@
             </div>
 
             {% if appointment.doctors_note %}
-                <div class="row my-3">
+                <div class="row my-2">
                     <div class="col-md-12 my-3">
                         <label for="doctor" class="form-check-label font-weight-bold">Doctors Note</label>
                           {{ appointment.doctors_note | safe }}
