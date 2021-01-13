@@ -67,10 +67,10 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td scope="col"> <h2 class="text-center font-weight-bold">0</h2> </td>
+                                <td scope="col"> <h2 class="text-center font-weight-bold">{{ pending_bookings.count }}</h2> </td>
                             </tr>
                             <tr>
-                                <td scope="col"> <button class="btn btn-success ml-5">Manage</button> </td>
+                                <td scope="col"> <a href="{% url 'authenticate:manage_booking_request' request.user.id %}" class="btn btn-success ml-5">Manage</a> </td>
                             </tr>
                         </tbody>
 

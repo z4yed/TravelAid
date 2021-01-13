@@ -26,8 +26,8 @@ ROOM_TYPE_CHOICES = (
 )
 
 PAYMENT_PROVIDERS = (
-    (BKASH, 'bKash'),
-    (ROCKET, 'Rocket'),
+    (BKASH, "bKash"),
+    (ROCKET, "Rocket"),
 )
 
 PAYMENT_STATUS_CHOICES = (
@@ -73,7 +73,8 @@ class BookAccommodation(models.Model):
     due_bills = models.FloatField(default=0)
     payment_status = models.CharField(choices=PAYMENT_STATUS_CHOICES, default="Unpaid", max_length=20)
     status = models.IntegerField(choices=APPROVE_USER_STATUS, default=1)
-    note = models.TextField(null=True, blank=True)
+    user_note = models.TextField(null=True, blank=True)
+    manager_note = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return "{a} by {b} ".format(a=self.room.room_number, b=self.user.first_name)
@@ -82,7 +83,7 @@ class BookAccommodation(models.Model):
 class AccommodationBillPayment(models.Model):
     bill = models.ForeignKey(BookAccommodation, on_delete=models.SET_NULL, related_name='bill', null=True, blank=True)
     payment_bdt = models.FloatField()
-    payment_provider = models.IntegerField(PAYMENT_PROVIDERS, null=True, blank=True)
+    payment_provider = models.IntegerField(choices=PAYMENT_PROVIDERS, default=1)
     account_number = models.CharField(max_length=11, null=True, blank=True)
     transaction_id = models.CharField(max_length=20, null=True, blank=True)
     date = models.DateTimeField(auto_now_add=True)

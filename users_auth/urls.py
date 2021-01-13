@@ -21,4 +21,6 @@ urlpatterns = [
     path('add-room/', views.RoomManageView.as_view(), name='add_room_url'),
     path('edit-room/<int:editable_id>', views.RoomManageView.as_view(), name='edit_room_url'),
     path('delete-room/<int:deletable_id>', views.RoomManageView.as_view(), name='delete_room_url'),
+
+    path('manage-booking-request/<int:manager_id>', views.ManageBookingRequestView.as_view(), name='manage_booking_request'),
 ]

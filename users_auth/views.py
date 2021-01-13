@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib import auth, messages
 
-from services.models import Hospital, Appointment, Accommodation, Room, ROOM_TYPE_CHOICES
+from services.models import Hospital, Appointment, Accommodation, Room, ROOM_TYPE_CHOICES, BookAccommodation
 from system.models import Expertise
 from .models import User, UserProfile
 from address.models import District, Address
@@ -58,13 +58,17 @@ class ManagerDashboardView(View):
         accommodations = Accommodation.objects.filter(owner=manager_obj)
         rooms = Accommodation.objects.none()
         for accommodation in accommodations:
-            rooms |= Room.objects.filter(accommodation=accommodation.id)
+            rooms |= Room.objects.filter(accommodation=accommodation.id)  # getting all rooms of same owner
+
+        room_ids = [room.id for room in rooms] # list of all room id
+        pending_bookings = BookAccommodation.objects.filter(room__in=room_ids, status=1)
 
         context = {
             'districts': districts,
             'accommodations': accommodations,
             'rooms': rooms,
             'room_type': list(ROOM_TYPE_CHOICES),
+            'pending_bookings': pending_bookings,
         }
         return render(request, 'dashboard/manager_dashboard.html', context)
 
@@ -161,6 +165,29 @@ class RoomManageView(View):
         room_obj.save()
         messages.success(request, 'Room Added Successfully. ')
         return redirect('authenticate:manager_dashboard_url', manager_id=request.user.id)
+
+
+class ManageBookingRequestView(View):
+    def get(self, request, **kwargs):
+        manager_obj = get_object_or_404(User, pk=kwargs.get('manager_id'))
+        accommodations = Accommodation.objects.filter(owner=manager_obj)
+        rooms = Accommodation.objects.none()
+        for accommodation in accommodations:
+            rooms |= Room.objects.filter(accommodation=accommodation.id)  # getting all rooms of same owner
+
+        room_ids = [room.id for room in rooms]  # list of all room id
+        all_bookings = BookAccommodation.objects.filter(room__in=room_ids)
+
+        context = {
+            'all_bookings': all_bookings,
+            'pending_bookings': all_bookings.filter(status=1),
+            'approved_bookings': all_bookings.filter(status=2),
+            'rejected_bookings': all_bookings.filter(status=3),
+        }
+        return render(request, 'managers/manage_bookings.html', context)
+
+    def post(self, request, **kwargs):
+        pass
 
 
 class LoginView(View):

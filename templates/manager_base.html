@@ -48,7 +48,7 @@
     .fa {
 
       font-size: 23px;
-      width: 60px;
+      width: 25px;
       text-align: center;
       text-decoration: none;
       margin: 5px 2px;
@@ -286,7 +286,6 @@
     </header>
     <ul>
       <li tabindex="0" class="icon-dashboard"> <a style="color:white; text-decoration:none;" href="{% url 'authenticate:manager_dashboard_url' request.user.id %}"><span>Dashboard</span></a> </li>
-      <li tabindex="0" class="icon-calendar"> <a style="color:white; text-decoration:none;" href=""><span>Manage Appointments</span></a></li>
       <li tabindex="0" class="fa fa-sign-out"><a href="{% url 'authenticate:logout_url' %}" style="color:white; text-decoration: none"><span>Logout</span></a></li>
     </ul>
   </nav>
