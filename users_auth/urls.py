@@ -12,4 +12,13 @@ urlpatterns = [
     path('doctor_dashboard/<int:doctor_id>/', views.DoctorDashboardView.as_view(), name='doctor_dashboard_url'),
     path('police_dashboard/', views.PoliceDashboardView.as_view(), name='police_dashboard_url'),
     path('manager_dashboard/<int:manager_id>/', views.ManagerDashboardView.as_view(), name='manager_dashboard_url'),
+
+    # Manager's Control
+    path('add-accommodation/', views.AccommodationManageView.as_view(), name='add_accommodation'),
+    path('edit-accommodation/<int:editable_id>',  views.AccommodationManageView.as_view(), name='edit_accommodation'),
+    path('delete-accommodation/<int:deletable_id>', views.AccommodationManageView.as_view(), name='delete_accommodation'),
+
+    path('add-room/', views.RoomManageView.as_view(), name='add_room_url'),
+    path('edit-room/<int:editable_id>', views.RoomManageView.as_view(), name='edit_room_url'),
+    path('delete-room/<int:deletable_id>', views.RoomManageView.as_view(), name='delete_room_url'),
 ]

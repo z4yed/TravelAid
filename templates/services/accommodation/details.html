@@ -10,7 +10,21 @@
 
 {% endblock %}
 {% block content %}
-    {% include 'navbar.html' %}
+    {% if request.user.is_user %}
+        {% include 'navbar.html' %}
+    {% else %}
+        <div class="row text-center font-weight-bold bg-dark">
+                <div class="col-md-4">
+                    {% if request.user.is_doctor %}
+                         <a class="nav-link" href="{% url 'authenticate:doctor_dashboard_url' request.user.id %}">Dashboard</a>
+                    {% endif %}
+                    {% if request.user.is_manager %}
+                        <a class="nav-link" href="{% url 'authenticate:manager_dashboard_url' request.user.id %}">Dashboard</a>
+                    {% endif %}
+                </div>
+          </div>
+    {% endif %}
+
 
     <div class="container my-4">
          <h3 class="text-center" style="font-weight: bold"> Details of : {{ object.name }} </h3>

@@ -1,0 +1,92 @@
+<!-- Modal -->
+<div class="modal fade" id="editRoom{{ room.id }}" role="dialog">
+<form action="{% url 'authenticate:edit_room_url' room.id %}" method="post" enctype="multipart/form-data"> {% csrf_token %}
+    <div class="modal-dialog modal-lg">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h4 class="modal-title">Update Room</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="room_number{{ room.id }}" class="form-check-label">Room Number </label>
+                        <input type="text" id="room_number{{ room.id }}" value="{{ room.room_number }}" name="room_number" class="form-control" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-check-label">Belongs To</label>
+                        <select name="accommodation" id="accommodation{{ room.id }}" class="form-control">
+                            {% for accommodation in accommodations %}
+                                <option value="{{ accommodation.id }}" {% ifequal room.accommodation accommodation %}
+                                    selected
+                                 {% endifequal %}>{{ accommodation.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-12">
+                        <label for="room_description" class="form-check-label">Description<span style="font-size: 14px; font-weight: bold;" id="error_msg2" class="text-danger"></span> </label>
+                        <textarea id="room_description{{ room.id }}" maxlength="2000" name="room_description" rows="50"
+                                          data-processed="0"
+                                          data-config='{"skin": "moono-lisa", "toolbar_Basic":
+                              [["Source", "-", "Bold", "Italic", "Image"]],
+                               "toolbar_Full": [["Styles", "Format", "Bold", "Italic", "Underline",
+                                "Strike", "SpellChecker", "Undo", "Redo"], ["Link", "Unlink", "Anchor"],
+                                ["Image", "Flash", "Table", "HorizontalRule"], ["TextColor", "BGColor"],
+                                ["Smiley", "SpecialChar"], ["Source"],  ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"], ["Outdent", "Indent"]],
+                                "toolbar": "Full", "height": 200, "filebrowserWindowWidth": 940,
+
+                                "filebrowserWindowHeight": 725,
+                                "filebrowserUploadUrl": "/ckeditor/upload/",
+                                "filebrowserBrowseUrl": "/ckeditor/browse/",
+
+                                "language": "en-us" }'
+                                          data-external-plugin-resources='[]'
+                                          data-type="ckeditortype" required> {{ room.description }}
+
+                             </textarea>
+                    </div>
+                </div>
+
+                <div class="row">
+                <div class="col-md-4">
+                        <label for="room_image{{ room.id }}e" class="form-check-label">Image</label>
+                        <input type="file" id="room_image{{ room.id }}" name="room_image" class="form-control">
+                    </div>
+
+                    <div class="col-md-4">
+                        <label for="room_type{{ room.id }}" class="form-check-label">Select Room Type</label>
+                        <select name="room_type" id="room_type{{ room.id }}" class="form-control">
+                            {% for type in room_type %}
+                                <option value="{{ type.0 }}" {% ifequal type.0 room.room_type %}
+                                    selected
+                                {% endifequal %}
+                                >{{ type.1 }}</option>
+                            {% endfor %}
+                        </select>
+
+                    </div>
+                     <div class="col-md-4">
+                         <label for="cost_per_day{{ room.id }}" class="form-check-label">Cost Per Day</label>
+                        <input type="text" id="cost_per_day{{ room.id }}" value="{{ room.cost_per_day }}" name="cost_per_day" class="form-control numberField" required>
+                    </div>
+
+                </div>
+
+        </div>
+        <div class="modal-footer">
+          <button type="submit" id="room_update_btn" class="btn btn-success">Add</button>
+          <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+
+</form>
+</div>

@@ -1,8 +1,9 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib import auth, messages
 
-from services.models import Hospital, Appointment
+from services.models import Hospital, Appointment, Accommodation, Room, ROOM_TYPE_CHOICES
 from system.models import Expertise
 from .models import User, UserProfile
 from address.models import District, Address
@@ -52,10 +53,114 @@ class PoliceDashboardView(View):
 
 class ManagerDashboardView(View):
     def get(self, request, manager_id):
-        context = {
+        manager_obj = get_object_or_404(User, pk=manager_id)
+        districts = District.objects.all()
+        accommodations = Accommodation.objects.filter(owner=manager_obj)
+        rooms = Accommodation.objects.none()
+        for accommodation in accommodations:
+            rooms |= Room.objects.filter(accommodation=accommodation.id)
 
+        context = {
+            'districts': districts,
+            'accommodations': accommodations,
+            'rooms': rooms,
+            'room_type': list(ROOM_TYPE_CHOICES),
         }
         return render(request, 'dashboard/manager_dashboard.html', context)
+
+
+class AccommodationManageView(View):
+    def get(self, request, **kwargs):
+        if 'deletable_id' in kwargs:
+            deletable_obj = get_object_or_404(Accommodation, pk=kwargs.get('deletable_id'))
+            deletable_obj.delete()
+            messages.success(request, 'Accommodation Deleted Successfully. ')
+            return redirect('authenticate:manager_dashboard_url', manager_id=request.user.id)
+
+    def post(self, request, **kwargs):
+        data = request.POST
+
+        if 'editable_id' in kwargs:
+            accommodation_obj = get_object_or_404(Accommodation, pk=kwargs.get('editable_id'))
+            name = data.get('new_name')
+            image = request.FILES.get('new_image')
+            location = data.get('new_location')
+            district = data.get('new_district')
+            zip_code = data.get('new_zip_code')
+            description = data.get('new_description')
+
+            accommodation_obj.name = name
+            if image:
+                accommodation_obj.image = image
+
+            # updating address object
+            accommodation_obj.address.address = location
+            accommodation_obj.address.district = District.objects.get(pk=district)
+            accommodation_obj.address.zip_code = zip_code
+            accommodation_obj.address.save()
+
+            accommodation_obj.description = description
+            accommodation_obj.save()
+
+            messages.success(request, 'Accommodation Updated Successfully,')
+            return redirect('authenticate:manager_dashboard_url', manager_id=request.user.id)
+
+        # adding Accommodation, This won't be executed if edit url called
+        name = data.get('name')
+        image = request.FILES.get('image')
+        location = data.get('location')
+        district = data.get('district')
+        zip_code = data.get('zip_code')
+        description = data.get('description')
+
+        # creating address object
+        district = get_object_or_404(District, pk=district)
+        address_obj = Address(address=location, district=district, zip_code=zip_code)
+        address_obj.save()
+
+        accommodation_obj = Accommodation(name=name, owner=request.user, image=image, address=address_obj, description=description)
+        accommodation_obj.save()
+
+        messages.success(request, 'Accommodation Added Successfully,')
+        return redirect('authenticate:manager_dashboard_url', manager_id=request.user.id)
+
+
+class RoomManageView(View):
+    def get(self, request, **kwargs):
+        if 'deletable_id' in kwargs:
+            room_obj = get_object_or_404(Room, pk=kwargs.get('deletable_id'))
+            room_obj.delete()
+            messages.success(request, 'Room Deleted Successfully. ')
+            return redirect('authenticate:manager_dashboard_url', manager_id=request.user.id)
+
+    def post(self, request, **kwargs):
+        data = request.POST
+        room_number = data.get('room_number')
+        image = request.FILES.get("room_image")
+        accommodation = data.get('accommodation')
+        description = data.get('room_description')
+        room_type = data.get('room_type')
+        cost_per_day = data.get('cost_per_day')
+
+        # In case of updating room
+        if 'editable_id' in kwargs:
+            room_obj = get_object_or_404(Room, pk=kwargs.get('editable_id'))
+            room_obj.room_number = room_number
+            if image:
+                room_obj.image = image
+            room_obj.accommodation = Accommodation.objects.get(pk=accommodation)
+            room_obj.description = description
+            room_obj.room_type = room_type
+            room_obj.cost_per_day = cost_per_day
+            room_obj.save()
+            messages.success(request, 'Room Updated Successfully. ')
+            return redirect('authenticate:manager_dashboard_url', manager_id=request.user.id)
+
+        room_obj = Room(accommodation=Accommodation.objects.get(pk=accommodation), room_type=room_type,
+                        room_number=room_number, image=image, description=description, cost_per_day=cost_per_day)
+        room_obj.save()
+        messages.success(request, 'Room Added Successfully. ')
+        return redirect('authenticate:manager_dashboard_url', manager_id=request.user.id)
 
 
 class LoginView(View):

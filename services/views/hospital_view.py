@@ -127,7 +127,6 @@ class ManageAppointmentsView(View):
 
     def post(self, request, **kwargs):
         if 'approve_id' in kwargs:
-            print("PENDING REQ.")
             appointment_obj = get_object_or_404(Appointment, pk=kwargs.get('approve_id'))
             data = request.POST
             doctors_note = data.get('doctors_note')

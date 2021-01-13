@@ -4,6 +4,12 @@
 
     <div class="container">
 
+        {% if messages  %}
+              {% for message in messages  %}
+                <h5 class="font-weight-bold text-center alert alert-{{message.tags}}"> {{message}} </h5>
+              {% endfor %}
+        {% endif %}
+
         <div class="row">
             <div class="col-md-1">
 
@@ -18,10 +24,11 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td scope="col"> <h2 class="text-center font-weight-bold">0</h2> </td>
+                                <td scope="col"> <h2 class="text-center font-weight-bold">{{ accommodations.count }}</h2> </td>
                             </tr>
                             <tr>
-                                <td scope="col"> <button class="btn btn-primary ml-5">Add New</button> </td>
+                                <td scope="col"> <button data-toggle="modal" data-target="#addAccommodation" class="btn btn-primary ml-5">Add New</button> </td>
+                                {% include 'modals/add_accommodation.html' %}
                             </tr>
                         </tbody>
 
@@ -38,10 +45,11 @@
                         </thead>
                         <tbody>
                             <tr>
-                                <td scope="col"> <h2 class="text-center font-weight-bold">0</h2> </td>
+                                <td scope="col"> <h2 class="text-center font-weight-bold">{{ rooms.count }}</h2> </td>
                             </tr>
                             <tr>
-                                <td scope="col"> <button class="btn btn-primary ml-5">Add New</button> </td>
+                                <td scope="col"> <button data-toggle="modal" data-target="#addRoom" class="btn btn-primary ml-5">Add New</button> </td>
+                                {% include 'modals/add_room.html' %}
                             </tr>
                         </tbody>
 
@@ -74,6 +82,82 @@
 
         <hr>
 
+    <div class="container">
+        <h2 class="text-center font-weight-bold">Accommodations</h2>
+        <div class="row mt-3">
+           {% for accommodation in accommodations %}
+               <div class="col-lg-4 my-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="text-center">{{ accommodation.name }}</h5>
+                        <h6 class="text-center">{{ accommodation.address.get_full_address }}</h6>
+                    </div>
+                    <div class="card-body">
+                        <img style="height: 220px; width: 830px" src="{{ accommodation.image.url }}" alt="Image Not Available" class="img-fluid">
+                    </div>
+                    <div class="card-footer">
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                          <a type="button" href="{% url 'services:accommodation_detail_url' accommodation.id %}" class="btn btn-primary"><i class="fa fa-eye"></i></a>
+                          <button type="button" data-toggle="modal" data-target="#editAccommodation{{ accommodation.id }}" class="btn btn-info mx-1"><i class="fa fa-edit"></i></button>
+                          {% include 'modals/edit_accommodation.html' %}
+                          <button type="button" data-toggle="modal" data-target="#deleteAccommodation{{ accommodation.id }}" class="btn btn-danger ml"><i class="fa fa-trash"></i></button>
+                           {% include 'modals/delete_accommodation.html' %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+           {% endfor %}
+        </div>
+    </div>
+
+    <div class="container my-5">
+        <h2 class="text-center font-weight-bold">Rooms</h2>
+        <div class="row mt-3">
+           {% for room in rooms %}
+               <div class="col-lg-4 my-2">
+                <div class="card" style="background: #f7f7f7">
+                    <div class="card-header">
+                        <h5 class="text-center" style="font-weight: bold">{{ room.room_number }}</h5>
+                        <p class="text-center" style="font-weight: bold">{{ room.accommodation.name }}</p>
+
+                        <h6 class="text-center" style="font-weight: bold">{{ room.room_type }} | {{ room.cost_per_day }} BDT/Day</h6>
+                        {% ifequal room.room_status 3%}
+                            <h6 class="small text-info text-center font-weight-bold">Booked</h6>
+                        {% else %}
+                            <h6 class="small text-center text-success font-weight-bold">Available</h6>
+                        {% endifequal %}
+
+                    </div>
+                    <div class="card-body">
+                        <img style="height: 180px; width: 600px" src="{{ room.image.url }}" alt="Image Not Available" class="img-fluid">
+                    </div>
+                    <div class="card-footer">
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                          <a type="button" href="{% url 'services:room_details' room.id %}" class="btn btn-primary"><i class="fa fa-eye"></i></a>
+                          <button type="button" data-toggle="modal" data-target="#editRoom{{ room.id }}" class="btn btn-info mx-1"><i class="fa fa-edit"></i></button>
+                            {% include 'modals/edit_room.html' %}
+                          <button type="button" data-toggle="modal" data-target="#deleteRoom{{ room.id }}" class="btn btn-danger ml"><i class="fa fa-trash"></i></button>
+                            {% include 'modals/delete_room.html' %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+           {% endfor %}
+        </div>
+    </div>
+
     </div>
 
 {% endblock content %}
+
+{% block script %}
+    <script>
+        $(document).ready(function(){
+           $(".numberField").keypress(function(e){
+                if ((e.which < 48 || e.which > 57)) {
+                  return false;
+                }
+            });
+        })
+    </script>
+{% endblock script %}
