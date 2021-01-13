@@ -51,7 +51,7 @@ class PoliceDashboardView(View):
 
 
 class ManagerDashboardView(View):
-    def get(self, request):
+    def get(self, request, manager_id):
         context = {
 
         }
@@ -83,7 +83,7 @@ class LoginView(View):
                 elif user.is_police:
                     return redirect('authenticate:police_dashboard_url')
                 elif user.is_manager:
-                    return redirect('authenticate:manager_dashboard_url')
+                    return redirect('authenticate:manager_dashboard_url', manager_id=user.id)
                 else:
                     return redirect('home_url')
 
@@ -228,5 +228,7 @@ class ProfileView(View):
         messages.success(request, 'Profile Updated Successfully. ')
         if profile_obj.user.is_doctor:
             return redirect('authenticate:doctor_dashboard_url', doctor_id=profile_obj.user.id)
+        if profile_obj.user.is_manager:
+            return redirect('authenticate:manager_dashboard_url', manager_id=profile_obj.user.id)
 
         return redirect('authenticate:profile_url', pk=profile_obj.id)

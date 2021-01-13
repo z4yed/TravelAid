@@ -12,7 +12,7 @@
                     {% if request.user.is_doctor %}
                          <a class="nav-link" href="{% url 'authenticate:doctor_dashboard_url' request.user.id %}">Dashboard</a>
                     {% endif %}
-                    {% if request.user.id_manager %}
+                    {% if request.user.is_manager %}
                         <a class="nav-link" href="{% url 'authenticate:manager_dashboard_url' request.user.id %}">Dashboard</a>
                     {% endif %}
                 </div>
@@ -113,6 +113,7 @@
                 </div>
             </div>
 
+        {% if request.user.is_doctor %}
             <div class="row mt-4">
                 <div class="col-md-6">
                     <label for="expertises" class="form-check-label my-3 font-weight-bold">Your Expertises</label>
@@ -124,7 +125,7 @@
                     </select>
                 </div>
             </div>
-
+        {% endif %}
 
         </div>
 

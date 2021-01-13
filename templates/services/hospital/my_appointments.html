@@ -45,7 +45,7 @@
                     <td>{{ appointment.get_status_display }}</td>
                     <td>
                         {% if appointment.status == 5 %}
-                            <a href="" class="btn btn-success"><i class="fa fa-print"></i></a>
+                            <a href="{% url 'services:download_appointment_invoice' appointment.id %}" class="btn btn-success"><i class="fa fa-print"></i></a>
                         {% endif %} 
                         <button data-toggle="modal" data-target="#appointmentDetails{{ appointment.id }}" class="btn btn-primary"><i class="fa fa-eye"></i></button>
                         {% include 'modals/appointment_details.html' %}

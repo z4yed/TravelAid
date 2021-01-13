@@ -60,7 +60,8 @@ class AppointmentBill(models.Model):
     medicine_charge = models.FloatField(default=0)
     doctors_charge = models.FloatField(default=0)
     others_charge = models.FloatField(default=0)
-    notes = models.TextField()
+    total_bills = models.FloatField(default=0)
+    notes = models.TextField(null=True, blank=True)
 
     def __str__(self):
         return "Bill ID : {a}".format(a=str(self.id))

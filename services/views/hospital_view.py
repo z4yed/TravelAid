@@ -1,13 +1,15 @@
 import datetime
 
 from django.contrib import messages
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views import View
 
 from address.models import District
-from services.models.hospital_models import Hospital, Appointment
+from services.models.hospital_models import Hospital, Appointment, AppointmentBill
 from users_auth.models import User
 from utils.filter import filter_by_address
+from utils.print_invoice import render_to_pdf
 
 
 class HospitalList(View):
@@ -123,16 +125,55 @@ class ManageAppointmentsView(View):
         }
         return render(request, 'doctors/appointment_manage.html', context)
 
-    def post(self, request, pending_id):
-        appointment_obj = get_object_or_404(Appointment, pk=pending_id)
-        data = request.POST
+    def post(self, request, **kwargs):
+        if 'approve_id' in kwargs:
+            print("PENDING REQ.")
+            appointment_obj = get_object_or_404(Appointment, pk=kwargs.get('approve_id'))
+            data = request.POST
+            doctors_note = data.get('doctors_note')
+            appointment_obj.status = 2
+        if 'reject_id' in kwargs:
+            appointment_obj = get_object_or_404(Appointment, pk=kwargs.get('reject_id'))
+            doctors_note = request.POST.get('doctors_reject_note')
+            appointment_obj.status = 3
 
-        doctors_note = data.get('doctors_note')
+        if 'release_id' in kwargs:
+            appointment_obj = get_object_or_404(Appointment, pk=kwargs.get('release_id'))
+            data = request.POST
+            room_charge = data.get('room_charge')
+            medicine_charge = data.get('medicine_charge')
+            doctors_fee = data.get('doctors_fee')
+            others_charge = data.get('others_charge')
+            total_bills = data.get('total_bills')
+            note = data.get('note')
+
+            appointment_obj.status = 5
+            appointment_obj.save()
+
+            bill_obj = AppointmentBill(appointment=appointment_obj, room_charge=room_charge, medicine_charge=medicine_charge,
+                                       doctors_charge=doctors_fee, others_charge=others_charge, total_bills=total_bills, notes=note)
+            bill_obj.save()
+            messages.success(request, 'Patient Released & Bill Generated Successfully. ')
+            return redirect('services:manage_appointments_url', doctor_id=request.user.id)
 
         appointment_obj.doctors_note = doctors_note
-        appointment_obj.status = 2
         appointment_obj.save()
         return redirect('services:manage_appointments_url', doctor_id=request.user.id)
 
 
+class DownloadAppointmentInvoice(View):
+    def get(self, request, appointment_bill_id, *args, **kwargs):
+        appointment_obj = get_object_or_404(Appointment, pk=appointment_bill_id)
+        invoice_obj = AppointmentBill.objects.get(appointment=appointment_obj)
 
+        context = {
+            'invoice_obj': invoice_obj,
+        }
+
+        pdf = render_to_pdf('services/hospital/invoice_template.html', context)
+
+        response = HttpResponse(pdf, content_type='application/pdf')
+        filename = "Invoice_%s.pdf" % (invoice_obj.id)
+        content = "attachment; filename='%s'" % (filename)
+        response['Content-Disposition'] = content
+        return response

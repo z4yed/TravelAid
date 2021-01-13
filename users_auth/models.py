@@ -14,7 +14,7 @@ REJECTED = 3
 APPROVE_USER_STATUS = (
     (PENDING, 'Pending'),
     (APPROVED, 'Approved'),
-    (REJECTED, 'REJECTED'),
+    (REJECTED, 'Rejected'),
 )
 
 
@@ -30,15 +30,15 @@ class User(AbstractUser):
 
     def __str__(self):
         if self.is_doctor:
-            return "{a} -- Doctor".format(a=self.first_name)
+            return "{a} -- Doctor".format(a=self.get_full_name())
         elif self.is_manager:
-            return "{a} -- Manager".format(a=self.first_name)
+            return "{a} -- Manager".format(a=self.get_full_name())
         elif self.is_police:
-            return "{a} -- Police".format(a=self.first_name)
+            return "{a} -- Police".format(a=self.get_full_name())
         elif self.is_staff:
             return "{a} -- Admin".format(a=self.username)
         else:
-            return "{a} -- Normal User".format(a=self.first_name)
+            return "{a} -- Normal User".format(a=self.get_full_name())
 
 
 from services.models.hospital_models import Hospital   # don't move it at the top. It might
@@ -53,10 +53,9 @@ class UserProfile(models.Model):
     updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='update_profile', null=True, blank=True)
     description = RichTextUploadingField(null=True, blank=True)
     expertise = models.ManyToManyField(Expertise, blank=True)
-    hospital = models.ForeignKey(Hospital, on_delete=models.SET_NULL, related_name='hospital', null=True, blank=True)
 
     def __str__(self):
-        return "{username}'s Info".format(username=self.user)
+        return "{a}'s Info".format(a=self.user.get_full_name())
 
 
 @receiver(post_save, sender=User)

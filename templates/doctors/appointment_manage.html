@@ -9,6 +9,13 @@
 <link rel="stylesheet" href="{% static 'fa/css/font-awesome.css' %}">
 
 <div class="container">
+
+    {% if messages  %}
+          {% for message in messages  %}
+            <h5 class="font-weight-bold text-center alert alert-{{message.tags}}"> {{message}} </h5>
+          {% endfor %}
+    {% endif %}
+
     <ul class="nav nav-tabs" id="myTab" role="tablist">
         <li class="nav-item">
             <a class="nav-link active" id="home-tab" data-toggle="tab" href="#pending" role="tab" aria-controls="home" aria-selected="true">Pending
@@ -64,7 +71,8 @@
                                 {% include 'modals/appointment_details.html' %}
                                 <button data-toggle="modal" data-target="#approveAppointment{{ appointment.id }}" class="btn btn-success"><i class="fa fa-check" ></i></button>
                                 {% include 'modals/approve_appointment.html' %}
-                                <button data-toggle="modal" data-target="" class="btn btn-danger"><i class="fa fa-ban" ></i></button>
+                                <button data-toggle="modal" data-target="#rejectAppointment{{ appointment.id }}" class="btn btn-danger"><i class="fa fa-ban" ></i></button>
+                                {% include 'modals/reject_appointment.html' %}
 
                             {% endif %}
                         </td>
@@ -77,9 +85,125 @@
 
             </div>
         </div>
-        <div class="tab-pane fade" id="approved" role="tabpanel" aria-labelledby="profile-tab">profile tab</div>
-        <div class="tab-pane fade" id="rejected" role="tabpanel" aria-labelledby="contact-tab">contact tab</div>
-        <div class="tab-pane fade" id="released" role="tabpanel" aria-labelledby="contact-tab">contact tab</div>
+        <div class="tab-pane fade" id="approved" role="tabpanel" aria-labelledby="profile-tab">
+           <div class="container mt-5">
+                <div id="table">
+                <table class="table table-stripped">
+                      <thead>
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Patient</th>
+                          <th scope="col">Requested Date</th>
+                          <th scope="col">Appointment Date</th>
+                          <th scope="col">Current Status</th>
+                          <th scope="col" class="text-center">Action</th>
+                        </tr>
+
+                      </thead>
+                      <tbody>
+
+                     {% for appointment in approved_appointments %}
+
+                      <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ appointment.patient.get_full_name }}</td>
+                        <td>{{ appointment.requested_on | date:"b d, Y" }}</td>
+                        <td>{{ appointment.date| date:"b d, Y"}}</td>
+                        <td>{{ appointment.get_status_display }}</td>
+                        <td>
+                                <button data-toggle="modal" data-target="#appointmentDetails{{ appointment.id }}" class="btn btn-info"><i class="fa fa-eye fa-xs" ></i></button>
+                                {% include 'modals/appointment_details.html' %}
+                                <button data-toggle="modal" data-target="#releaseAppointment{{ appointment.id }}" class="btn btn-success"><i class="fa fa-sign-out" ></i></button>
+                                {% include 'modals/release_appointment.html' %}
+                        </td>
+                      </tr>
+                   {% endfor %}
+
+                  </tbody>
+                  </table>
+            </div>
+
+            </div>
+        </div>
+        <div class="tab-pane fade" id="rejected" role="tabpanel" aria-labelledby="contact-tab">
+            <div class="container mt-5">
+                <div id="table">
+                <table class="table table-stripped">
+                      <thead>
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Patient</th>
+                          <th scope="col">Requested Date</th>
+                          <th scope="col">Appointment Date</th>
+                          <th scope="col">Current Status</th>
+                          <th scope="col" class="text-center">Action</th>
+                        </tr>
+
+                      </thead>
+                      <tbody>
+
+                     {% for appointment in rejected_appointments %}
+
+                      <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ appointment.patient.get_full_name }}</td>
+                        <td>{{ appointment.requested_on | date:"b d, Y" }}</td>
+                        <td>{{ appointment.date| date:"b d, Y"}}</td>
+                        <td>{{ appointment.get_status_display }}</td>
+                        <td>
+                            <button data-toggle="modal" data-target="#appointmentDetails{{ appointment.id }}" class="btn btn-info"><i class="fa fa-eye fa-xs" ></i></button>
+                            {% include 'modals/appointment_details.html' %}
+                        </td>
+                      </tr>
+                   {% endfor %}
+
+                  </tbody>
+                  </table>
+            </div>
+
+            </div>
+        </div>
+
+
+        <div class="tab-pane fade" id="released" role="tabpanel" aria-labelledby="contact-tab">
+            <div class="container mt-5">
+                <div id="table">
+                <table class="table table-stripped">
+                      <thead>
+                        <tr>
+                          <th scope="col">#</th>
+                          <th scope="col">Patient</th>
+                          <th scope="col">Requested Date</th>
+                          <th scope="col">Appointment Date</th>
+                          <th scope="col">Current Status</th>
+                          <th scope="col" class="text-center">Action</th>
+                        </tr>
+
+                      </thead>
+                      <tbody>
+
+                     {% for appointment in released_appointments %}
+
+                      <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ appointment.patient.get_full_name }}</td>
+                        <td>{{ appointment.requested_on | date:"b d, Y" }}</td>
+                        <td>{{ appointment.date| date:"b d, Y"}}</td>
+                        <td>{{ appointment.get_status_display }}</td>
+                        <td>
+                            <button data-toggle="modal" data-target="#appointmentDetails{{ appointment.id }}" class="btn btn-info"><i class="fa fa-eye fa-xs" ></i></button>
+                            {% include 'modals/appointment_details.html' %}
+                            <a href="{% url 'services:download_appointment_invoice' appointment.id %}" class="btn btn-success"><i class="fa fa-print"></i></a>
+                        </td>
+                      </tr>
+                   {% endfor %}
+
+                  </tbody>
+                  </table>
+            </div>
+
+            </div>
+        </div>
     </div>
 </div>
 
@@ -98,5 +222,27 @@
             $('#myTab a[href="' + activeTab + '"]').tab('show');
         }
     });
+
+
+    $(".numberField").keypress(function(e){
+        if ((e.which < 48 || e.which > 57)) {
+          return false;
+        }
+    });
+
+
+    </script>
+
+    <script>
+    function calculate_bill(){
+        let room_charge = parseFloat($("#room_charge").val() || 0)
+        let medicine_charge = parseFloat($("#medicine_charge").val() || 0)
+        let doctors_fee = parseFloat($("#doctors_fee").val() || 0)
+        let others_charge = parseFloat($("#others_charge").val() || 0)
+
+        let total_bills = room_charge + medicine_charge + doctors_fee +  others_charge
+        $("#total_bills").val(total_bills)
+
+    }
     </script>
 {% endblock %}

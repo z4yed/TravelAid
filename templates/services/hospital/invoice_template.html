@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <title>Bill</title>
+
+      <style>
+    @page {
+        size: a4 portrait;
+        @frame header_frame {           /* Static Frame */
+            -pdf-frame-content: header_content;
+            left: 50pt; width: 512pt; top: 50pt; height: 40pt;
+        }
+        @frame content_frame {          /* Content Frame */
+            left: 50pt; width: 512pt; top: 90pt; height: 632pt;
+        }
+        @frame footer_frame {           /* Another static Frame */
+            -pdf-frame-content: footer_content;
+            left: 50pt; width: 512pt; top: 772pt; height: 20pt;
+        }
+    }
+</style>
+
+  </head>
+  <body>
+
+    <h1 style="color: #0E2231; text-align: center">INVOICE</h1>
+    <h1 style="color: #1d2124; text-align: center">Invoice # {{ invoice_obj.id }}<br>
+        Date of Receipt : {% now "jS F Y H:i" %} <br>
+    </h1>
+    <hr>
+
+    <h2>Bill From : </h2>
+    <h2 style="color: #0b2e13">{{ invoice_obj.appointment.patient.get_full_name }}</h2>
+    <h2 style="color: #0b2e13">{{ invoice_obj.appointment.patient.user_info.address }}</h2><br><br>
+
+    <h2>Bill To: </h2>
+    <h2 style="color: #0b2e13">{{ invoice_obj.appointment.doctor.get_full_name }}</h2>
+    {% for hospital in invoice_obj.appointment.doctor.hospital_set.all %}
+       <h2 style="color: #0b2e13">{{ hospital.name }}</h2>
+       <h2 style="color: #0b2e13">{{ hospital.address.get_full_address }}</h2>
+    {% endfor %}
+    
+
+    <table style="border: 1px solid black">
+        <tr style="padding: 5px;">
+            <th>Title </th>
+            <th>Costs(BDT)</th>
+        </tr>
+        <tr style="text-align: center;padding: 5px;">
+            <td>Doctor's Fee</td>
+            <td style="text-align: right">{{ invoice_obj.doctors_charge }}</td>
+        </tr>
+        <tr style="text-align: center;padding: 5px;">
+            <td>Room Charge</td>
+            <td style="text-align: right">{{ invoice_obj.room_charge }}</td>
+        </tr>
+        <tr style="text-align: center;padding: 5px;">
+            <td>Medicine</td>
+            <td style="text-align: right">{{ invoice_obj.medicine_charge }}</td>
+        </tr>
+        <tr style="text-align: center;padding: 5px;">
+            <td>Others Charge</td>
+            <td style="text-align: right">{{ invoice_obj.others_charge }}</td>
+        </tr>
+        <tr style="padding: 5px; text-align: center;">
+            <td style="font-weight: bold">Total</td>
+            <td style="font-weight: bold; text-align: right">{{ invoice_obj.total_bills }}</td>
+        </tr>
+    </table>
+
+    <hr>
+        <p style="text-align: center">{{ invoice_obj.notes }}</p>
+    <hr>
+
+
+  </body>
+</html>

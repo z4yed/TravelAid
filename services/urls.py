@@ -25,5 +25,8 @@ urlpatterns = [
 
     # Doctor Controls
     path('manage-appointments/<int:doctor_id>/', hospital_views.ManageAppointmentsView.as_view(), name='manage_appointments_url'),
-    path('approve-appointment/<int:pending_id>/', hospital_views.ManageAppointmentsView.as_view(), name='approve_appointmetn_url'),
+    path('approve-appointment/<int:approve_id>/', hospital_views.ManageAppointmentsView.as_view(), name='approve_appointmetn_url'),
+    path('reject-appointment/<int:reject_id>/', hospital_views.ManageAppointmentsView.as_view(), name='reject_appointment_url'),
+    path('release-appointment/<int:release_id>/', hospital_views.ManageAppointmentsView.as_view(), name='release_appointment_url'),
+    path('download-appointment-invoice/<int:appointment_bill_id>/', hospital_views.DownloadAppointmentInvoice.as_view(), name='download_appointment_invoice'),
 ]
