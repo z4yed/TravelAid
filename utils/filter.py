@@ -13,8 +13,7 @@ def filter_by_address(model, location, district, zip_code):
     return queryset
 
 
-def filter_room(model, room_status, room_type, cost_per_day):
-    queryset = model.objects.all()
+def filter_room(queryset, room_status, room_type, cost_per_day):
     if is_value(room_status):
         queryset = queryset.filter(current_status=room_status)
     if is_value(room_type):

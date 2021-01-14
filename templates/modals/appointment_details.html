@@ -17,7 +17,7 @@
                 </div>
                 <div class="col-md-6 my-3">
                     <label for="date" class="form-check-label font-weight-bold">Appointment Date</label>
-                    <input class="form-control" type="text" value="{{ appointment.date | date:"b d, Y" }}" readonly>
+                    <input class="form-control" type="text" value="{{ appointment.date | date:"b d, Y h:i A" }}" readonly>
                 </div>
             </div>
 

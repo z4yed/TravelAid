@@ -40,10 +40,12 @@ class AccommodationList(LoginRequiredMixin, View):
 class AccommodationDetailView(LoginRequiredMixin, View):
     def get(self, request, pk):
         accommodation_obj = get_object_or_404(Accommodation, pk=pk)
+        all_room = accommodation_obj.room_set.all()
         rooms = accommodation_obj.room_set.all()
         available_rooms_count = accommodation_obj.room_set.filter(current_status=1).count()
         booked_rooms_count = accommodation_obj.room_set.filter(current_status=3).count()
         context = {
+            'all_room': all_room,
             'object': accommodation_obj,
             'rooms': rooms,
             'available_rooms': available_rooms_count,
@@ -53,6 +55,7 @@ class AccommodationDetailView(LoginRequiredMixin, View):
 
     def post(self, request, pk):
         accommodation_obj = get_object_or_404(Accommodation, pk=pk)
+        all_room = accommodation_obj.room_set.all()
         available_rooms_count = accommodation_obj.room_set.filter(current_status=1).count()
         booked_rooms_count = accommodation_obj.room_set.filter(current_status=3).count()
 
@@ -60,9 +63,10 @@ class AccommodationDetailView(LoginRequiredMixin, View):
         room_type = request.POST.get('room_type')
         cost_per_day = request.POST.get('cost_per_day')
 
-        rooms = filter_room(Room, room_status, room_type, cost_per_day)
+        rooms = filter_room(all_room, room_status, room_type, cost_per_day)
 
         context = {
+            'all_room': all_room,
             'object': accommodation_obj,
             'rooms': rooms,
             'available_rooms': available_rooms_count,

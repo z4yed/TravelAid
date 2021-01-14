@@ -15,7 +15,7 @@
                 <div class="row">
                     <div class="col-md-6">
                         <label for="appointment_date" class="form-check-label">Appointment Date <span style="font-size: 14px; font-weight: bold;" id="error_msg" class="text-danger"></span> </label>
-                        <input type="text" id="appointment_date" value="{{ appointment.date | date:"b d, Y" }}" name="appointment_date" class="form-control" required>
+                        <input type="text" id="appointment_date" value="{{ appointment.date | date:"b d, Y h:i A" }}" name="appointment_date" class="form-control" required>
                     </div>
                 </div>
                 <div class="row my-3" id='to_date_div'>

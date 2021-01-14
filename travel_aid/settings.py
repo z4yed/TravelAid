@@ -145,5 +145,4 @@ STATIC_ROOT = os.path.join(BASE_DIR, '/assets/')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = 'media'
 
-
 LOGIN_URL = '/auth/login/'

@@ -65,8 +65,7 @@ class DoctorDetailsView(LoginRequiredMixin, View):
 
         data = request.POST
         appointment_date = data.get('appointment_date')
-        appointment_date = datetime.datetime.strptime(appointment_date, '%b %d, %Y').strftime('%Y-%m-%d')  # 2021-01-09
-
+        appointment_date = datetime.datetime.strptime(appointment_date, '%b %d, %Y %H:%M').strftime('%Y-%m-%d %H:%M')  # 2021-01-09
         problem_desc = data.get('problem_desc')
 
         appointment = Appointment(doctor=doctor_obj, patient=request.user, date=appointment_date,
@@ -90,7 +89,7 @@ class UserAppointmentView(LoginRequiredMixin, View):
         data = request.POST
 
         appointment_date = data.get('appointment_date')
-        appointment_date = datetime.datetime.strptime(appointment_date, '%b %d, %Y').strftime('%Y-%m-%d')  # 2021-01-09
+        appointment_date = datetime.datetime.strptime(appointment_date, '%b %d, %Y %H:%M').strftime('%Y-%m-%d %H:%M')  # 2021-01-09
         problem_desc = data.get('problem_desc')
 
         appointment.date = appointment_date

@@ -32,17 +32,22 @@
                         <h4 class="font-weight-bold">Current Status : {% ifequal room.room_type 3 %} <span class="text-info">Booked</span> {% else %} <span class="text-success">Available</span> {% endifequal %}</h4>
                     </li>
                     <li><h4 class="font-weight-bold">Belongs to : <a class="font-weight-normal" href="{% url 'services:accommodation_detail_url' room.accommodation.id %}">{{ room.accommodation }}</a></h4></li>
-                    {% if room.current_status != 3 %}
-                        {% if request.user.is_user %}
-                            <button data-toggle="modal" data-target="#bookRoom{{ room.id }}" id="book_button" class="btn btn-success justify-content-center">Book</button>
-                            {% include 'modals/book_room_modal.html' %}
-                        {% endif %}
+                    {% if request.user.is_user %}
+                        <button data-toggle="modal" data-target="#bookRoom{{ room.id }}" id="book_button" class="btn btn-success justify-content-center">Book</button>
+                        {% include 'modals/book_room_modal.html' %}
                     {% endif %}
                 </ul>
 
                 </div>
             </div>
         </div>
+
+         {% for date in room.book_room.all %}
+            {% if date.status == 2 %}
+                <input class="start_date" type="hidden" readonly value="{{ date.start_date | date:"m/d/Y" }}">
+                <input class="end_date" type="hidden" readonly value="{{ date.end_date | date:"m/d/Y" }}">
+             {% endif %}
+         {% endfor %}
 
         <div class="container">
             <div id="room_image">
@@ -78,9 +83,43 @@
 
     <script>
         $(document).ready(function (){
+            let booked_days = []
+
+            Date.prototype.addDays = function(days) {
+                let date = new Date(this.valueOf());
+                date.setDate(date.getDate() + days);
+                return date;
+            }
+
+            function getDates(startDate, stopDate) {
+                let currentDate = startDate;
+                while (currentDate <= stopDate) {
+                    let today = new Date (currentDate)
+                    let date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+                    booked_days.push(date);
+                    currentDate = currentDate.addDays(1);
+                }
+            }
+
+
+            let start_dates = $(".start_date")  // Array of start Dates
+            let end_dates = $(".end_date")        // Array of end Dates
+            for(let i=0; start_dates[i]; i++){
+                let start_date =new Date($(start_dates[i]).val())
+                let end_date =new Date($(end_dates[i]).val())
+                getDates(start_date, end_date)
+            }
+
+            //console.log(booked_days)
 
             $("#from_date").datepicker({
+                beforeShowDay: function(date){
+                    let string = jQuery.datepicker.formatDate('yy-m-dd', date);
+                    return [ booked_days.indexOf(string) == -1 ]
+                },
+
                 onSelect:function (){
+
                     let date = $("#from_date").datepicker('getDate')
                     let today = new Date()
                     today.setHours(0,0,0,0);
@@ -94,14 +133,31 @@
                       $("#error_msg").text('')
                       $("#request_btn").show()
                     }
-                },
+
+                    let days = calculate_days()
+                      if(days != 'Invalid'){
+                          $("#error_msg2").text('')
+                          $("#request_btn").show()
+                          let cpd = $("#cost_per_day").val()
+                          let total_bills = Number(cpd) * (days+1)
+                          $("#total_bills").val(total_bills)
+                      }
+                      else{
+                          $("#error_msg2").text('End Date Must be greater than Start Date')
+                          $("#request_btn").hide()
+                      }
+                    },
                 dateFormat: "M d, yy",
                 changeMonth: true,
                 changeYear: true,
             })
-            $("#from_date").datepicker('setDate', 'today');
+
 
             $("#to_date").datepicker({
+                beforeShowDay: function(date){
+                    let string = jQuery.datepicker.formatDate('yy-m-dd', date);
+                    return [ booked_days.indexOf(string) == -1 ]
+                },
                 dateFormat: "M d, yy",
                 changeMonth: true,
                 changeYear: true,

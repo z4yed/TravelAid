@@ -54,13 +54,12 @@
     <script>
     $(document).ready(function (){
 
-        $("#appointment_date").datepicker({
+        $("#appointment_date").datetimepicker({
             onSelect:function (){
-                let date = $("#appointment_date").datepicker('getDate')
+                let date = $("#appointment_date").datetimepicker('getDate')
                 let today = new Date()
-                today.setHours(0,0,0,0);
                 if(date < today){
-                  $("#error_msg").text('Appointment Date Can\'t be earlier than today. ')
+                  $("#error_msg").text('Appointment Date Can\'t be earlier than Now. ')
                   $("#submit_appointment_btn").hide()
                 }
                 else{

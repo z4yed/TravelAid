@@ -41,7 +41,7 @@
                 <div class="row" style="margin-left: 120px;">
                     <div class="col-md-3" style="height: 100px; width: 70px; background: #1c7430">
                         <h2 class="text-center">Total Rooms</h2>
-                        <h3 class="text-center">{{ rooms.count }}</h3>
+                        <h3 class="text-center">{{ all_room.count }}</h3>
                     </div>
                     <div class="col-md-3 mx-5" style="height: 100px; width: 70px; background: #0c5460">
                         <h2 class="text-center">Available</h2>
@@ -98,12 +98,6 @@
                             <div class="card-header">
                                 <h5 class="text-center" style="font-weight: bold">{{ room.room_number }}</h5>
                                 <h6 class="text-center" style="font-weight: bold">{{ room.room_type }} | {{ room.cost_per_day }} BDT/Day</h6>
-                                {% ifequal room.room_status 3%}
-                                    <h6 class="small text-info text-center font-weight-bold">Booked</h6>
-                                {% else %}
-                                    <h6 class="small text-center text-success font-weight-bold">Available</h6>
-                                {% endifequal %}
-
                             </div>
                             <div class="card-body">
                                 <img style="height: 180px; width: 600px" src="{{ room.image.url }}" alt="Image Not Available" class="img-fluid">

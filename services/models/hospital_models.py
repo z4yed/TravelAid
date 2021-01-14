@@ -44,7 +44,7 @@ class Hospital(models.Model):
 class Appointment(models.Model):
     doctor = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='doctor', null=True, blank=True)
     patient = models.ForeignKey(User, on_delete=models.SET_NULL, related_name='patient', null=True, blank=True)
-    date = models.DateField()
+    date = models.DateTimeField()
     description = RichTextUploadingField(null=True, blank=True)
     status = models.IntegerField(choices=APPOINTMENT_STATUS, default=1)
     doctors_note = RichTextUploadingField(null=True, blank=True)

@@ -40,8 +40,8 @@
                   <tr>
                     <td>{{ forloop.counter }}</td>
                     <td><a href="{% url 'services:doctor_details_url' appointment.doctor.id %}">{{ appointment.doctor.get_full_name }}</a></td>
-                    <td>{{ appointment.requested_on | date:"b d, Y" }}</td>
-                    <td>{{ appointment.date| date:"b d, Y"}}</td>
+                    <td>{{ appointment.requested_on | date:"b d, Y h:i A" }}</td>
+                    <td>{{ appointment.date| date:"b d, Y h:i A"}}</td>
                     <td>{{ appointment.get_status_display }}</td>
                     <td>
                         {% if appointment.status == 5 %}
@@ -73,13 +73,13 @@
     <script>
     $(document).ready(function (){
 
-        $("#appointment_date").datepicker({
+        $("#appointment_date").datetimepicker({
             onSelect:function (){
                 let date = $("#appointment_date").datepicker('getDate')
                 let today = new Date()
                 today.setHours(0,0,0,0);
                 if(date < today){
-                  $("#error_msg").text('Appointment Date Can\'t be earlier than today. ')
+                  $("#error_msg").text('Appointment Date Can\'t be earlier than Now. ')
                   $("#update_appointment_btn").hide()
                 }
                 else{
