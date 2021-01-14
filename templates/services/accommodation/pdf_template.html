@@ -65,8 +65,14 @@
     </table>
 
     <hr>
-        <p style="text-align: center">{{ invoice_obj.note }}</p>
+  {% if invoice_obj.user_note %}
+    <p style="text-align: center">User's Note : {{ invoice_obj.user_note }}</p>
+  {% endif %}
     <hr>
+  {% if invoice_obj.manager_note %}
+    <p style="text-align: center">Manager's Note: {{ invoice_obj.manager_note }}</p>
+    <hr>
+  {% endif %}
 
 
   </body>

@@ -187,7 +187,27 @@ class ManageBookingRequestView(View):
         return render(request, 'managers/manage_bookings.html', context)
 
     def post(self, request, **kwargs):
-        pass
+        if 'approvable_id' in kwargs:
+            booking_obj = get_object_or_404(BookAccommodation, pk=kwargs.get('approvable_id'))
+            manager_note = request.POST.get('note')
+            booking_obj.status = 2
+            booking_obj.manager_note = manager_note
+            booking_obj.room.current_status = 3   # making room available to Booked
+            booking_obj.room.save()
+            booking_obj.save()
+
+            messages.success(request, 'Booking Request Approved. ')
+            return redirect('authenticate:manage_booking_request', manager_id=request.user.id)
+
+        if 'rejectable_id' in kwargs:
+            booking_obj = get_object_or_404(BookAccommodation, pk=kwargs.get('rejectable_id'))
+            manager_note = request.POST.get('note')
+            booking_obj.manager_note = manager_note
+            booking_obj.status = 3
+            booking_obj.save()
+
+            messages.success(request, 'Booking Request Rejected. ')
+            return redirect('authenticate:manage_booking_request', manager_id=request.user.id)
 
 
 class LoginView(View):

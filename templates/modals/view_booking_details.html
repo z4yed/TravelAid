@@ -1,6 +1,6 @@
 <!-- Modal -->
 <div class="modal fade" id="bookingDetails{{ booking.id }}" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
 
       <!-- Modal content-->
       <div class="modal-content">
@@ -22,7 +22,10 @@
                 <li class="font-weight-bold"><h5>Paid Bills : {{ booking.paid_bills }} BDT</h5></li>
                 <li class="font-weight-bold"><h5>Due Bills : {{ booking.due_bills }} BDT</h5></li>
                 <li class="font-weight-bold"><h5>Payment Status : {{ booking.payment_status }}</h5></li>
-                <li class="font-weight-bold"><h5>Note : {{ booking.note }}</h5></li>
+                <li class="font-weight-bold"><h5>User's Note : {{ booking.user_note }}</h5></li>
+                {% if booking.manager_note %}
+                    <li class="font-weight-bold"><h5>Manager's Note : {{ booking.manager_note }}</h5></li>
+                {% endif %}
 
             </ol>
 

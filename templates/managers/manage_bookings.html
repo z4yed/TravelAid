@@ -46,7 +46,6 @@
                               <th scope="col">Ending Date</th>
                               <th scope="col">Total Costs(BDT)</th>
                               <th scope="col">Paid(BDT)</th>
-                              <th scope="col">Status</th>
                               <th scope="col" class="text-center">Action</th>
                             </tr>
                       </thead>
@@ -61,17 +60,16 @@
                         <td>{{ booking.end_date | date:"b d, Y" }}</td>
                         <td>{{ booking.total_bills}}</td>
                         <td>{{ booking.paid_bills}}</td>
-                        <td>{{ booking.get_status_display }}</td>
                         <td>
                         <button data-toggle="modal" data-target="#bookingDetails{{ booking.id }}" class="btn btn-primary"><i class="fa fa-eye"></i></button>
                             {% include 'modals/view_booking_details.html' %}
                         <button data-toggle="modal" data-target="#paymentHistory{{ booking.id }}" class="btn btn-info"><i class="fa fa-history"></i></button>
                             {% include 'modals/payment_history.html' %}
-                        <button data-toggle="modal" data-target="#bookingDetails{{ booking.id }}" class="btn btn-success"><i class="fa fa-check"></i></button>
-                        {% include 'modals/view_booking_details.html' %}
+                        <button data-toggle="modal" data-target="#approveBooking{{ booking.id }}" class="btn btn-success"><i class="fa fa-check"></i></button>
+                        {% include 'modals/approve_booking.html' %}
 
-                        <button data-toggle="modal" data-target="#bookingDetails{{ booking.id }}" class="btn btn-danger"><i class="fa fa-ban"></i></button>
-                        {% include 'modals/view_booking_details.html' %}
+                        <button data-toggle="modal" data-target="#rejectBooking{{ booking.id }}" class="btn btn-danger"><i class="fa fa-ban"></i></button>
+                        {% include 'modals/reject_booking.html' %}
 
                         </td>
                       </tr>
@@ -89,34 +87,38 @@
                 <div id="table">
                 <table class="table table-stripped">
                       <thead>
-                        <tr>
-                          <th scope="col">#</th>
-                          <th scope="col">Patient</th>
-                          <th scope="col">Requested Date</th>
-                          <th scope="col">Appointment Date</th>
-                          <th scope="col">Current Status</th>
-                          <th scope="col" class="text-center">Action</th>
-                        </tr>
-
+                            <tr>
+                              <th scope="col">#</th>
+                              <th scope="col">Room Number</th>
+                              <th scope="col">Starting Date</th>
+                              <th scope="col">Ending Date</th>
+                              <th scope="col">Total Costs(BDT)</th>
+                              <th scope="col">Paid(BDT)</th>
+                              <th scope="col" class="text-center">Action</th>
+                            </tr>
                       </thead>
                       <tbody>
 
-                     {% for appointment in approved_appointments %}
+                     {% for booking in approved_bookings %}
 
                       <tr>
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ appointment.patient.get_full_name }}</td>
-                        <td>{{ appointment.requested_on | date:"b d, Y" }}</td>
-                        <td>{{ appointment.date| date:"b d, Y"}}</td>
-                        <td>{{ appointment.get_status_display }}</td>
+                        <td><a href="{% url 'services:room_details' booking.room.id %}">{{ booking.room.room_number }}</a></td>
+                        <td>{{ booking.start_date| date:"b d, Y"}}</td>
+                        <td>{{ booking.end_date | date:"b d, Y" }}</td>
+                        <td>{{ booking.total_bills}}</td>
+                        <td>{{ booking.paid_bills}}</td>
                         <td>
-                                <button data-toggle="modal" data-target="#appointmentDetails{{ appointment.id }}" class="btn btn-info"><i class="fa fa-eye fa-xs" ></i></button>
-                                {% include 'modals/appointment_details.html' %}
-                                <button data-toggle="modal" data-target="#releaseAppointment{{ appointment.id }}" class="btn btn-success"><i class="fa fa-sign-out" ></i></button>
-                                {% include 'modals/release_appointment.html' %}
+
+                        <a href="{% url 'services:print_invoice_url' booking.id %}" class="btn btn-success"><i class="fa fa-print"></i></a>
+                        <button data-toggle="modal" data-target="#bookingDetails{{ booking.id }}" class="btn btn-primary"><i class="fa fa-eye"></i></button>
+                            {% include 'modals/view_booking_details.html' %}
+                        <button data-toggle="modal" data-target="#paymentHistory{{ booking.id }}" class="btn btn-info"><i class="fa fa-history"></i></button>
+                            {% include 'modals/payment_history.html' %}
                         </td>
                       </tr>
-                   {% endfor %}
+
+                {% endfor %}
 
                   </tbody>
                   </table>
@@ -129,32 +131,37 @@
                 <div id="table">
                 <table class="table table-stripped">
                       <thead>
-                        <tr>
-                          <th scope="col">#</th>
-                          <th scope="col">Patient</th>
-                          <th scope="col">Requested Date</th>
-                          <th scope="col">Appointment Date</th>
-                          <th scope="col">Current Status</th>
-                          <th scope="col" class="text-center">Action</th>
-                        </tr>
-
+                            <tr>
+                              <th scope="col">#</th>
+                              <th scope="col">Room Number</th>
+                              <th scope="col">Starting Date</th>
+                              <th scope="col">Ending Date</th>
+                              <th scope="col">Total Costs(BDT)</th>
+                              <th scope="col">Paid(BDT)</th>
+                              <th scope="col" class="text-center">Action</th>
+                            </tr>
                       </thead>
                       <tbody>
 
-                     {% for appointment in rejected_appointments %}
+                     {% for booking in rejected_bookings %}
 
                       <tr>
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ appointment.patient.get_full_name }}</td>
-                        <td>{{ appointment.requested_on | date:"b d, Y" }}</td>
-                        <td>{{ appointment.date| date:"b d, Y"}}</td>
-                        <td>{{ appointment.get_status_display }}</td>
+                        <td><a href="{% url 'services:room_details' booking.room.id %}">{{ booking.room.room_number }}</a></td>
+                        <td>{{ booking.start_date| date:"b d, Y"}}</td>
+                        <td>{{ booking.end_date | date:"b d, Y" }}</td>
+                        <td>{{ booking.total_bills}}</td>
+                        <td>{{ booking.paid_bills}}</td>
                         <td>
-                            <button data-toggle="modal" data-target="#appointmentDetails{{ appointment.id }}" class="btn btn-info"><i class="fa fa-eye fa-xs" ></i></button>
-                            {% include 'modals/appointment_details.html' %}
+                        <button data-toggle="modal" data-target="#bookingDetails{{ booking.id }}" class="btn btn-primary"><i class="fa fa-eye"></i></button>
+                            {% include 'modals/view_booking_details.html' %}
+                        <button data-toggle="modal" data-target="#paymentHistory{{ booking.id }}" class="btn btn-info"><i class="fa fa-history"></i></button>
+                            {% include 'modals/payment_history.html' %}
+
                         </td>
                       </tr>
-                   {% endfor %}
+
+                {% endfor %}
 
                   </tbody>
                   </table>

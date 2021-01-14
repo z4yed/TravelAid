@@ -54,6 +54,8 @@
                             <button data-toggle="modal" data-target="#payment{{ booking.id }}" class="btn btn-success"><i class="fa fa-money"></i></button>
                             {% include 'modals/payment_modal.html' %}
                         {% endif %}
+                            <button data-toggle="modal" data-target="#paymentHistory{{ booking.id }}" class="btn btn-secondary"><i class="fa fa-history"></i></button>
+                            {% include 'modals/payment_history.html' %}
                         {% if booking.status == 2 %}
                             <a href="{% url 'services:print_invoice_url' booking.id %}" class="btn btn-success"><i class="fa fa-print"></i></a>
                         {% endif %}
@@ -63,8 +65,10 @@
                             <button data-toggle="modal" data-target="#editBooking{{ booking.id }}" class="btn btn-info"><i class="fa fa-edit"></i></button>
                             {% include 'modals/update_room_book.html' %}
                         {% endif %}
+                        {% if booking.status == 1 %}
                         <button data-toggle="modal" data-target="#delete_booking{{ booking.id }}" class="btn btn-danger"><i class="fa fa-trash"></i></button>
                             {% include 'modals/booking_delete.html' %}
+                       {% endif %}
                     </td>
                   </tr>
 
