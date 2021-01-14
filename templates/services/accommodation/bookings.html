@@ -61,10 +61,6 @@
                         {% endif %}
                         <button data-toggle="modal" data-target="#bookingDetails{{ booking.id }}" class="btn btn-primary"><i class="fa fa-eye"></i></button>
                             {% include 'modals/view_booking_details.html' %}
-                        {% if booking.payment_status == 'Unpaid' %}
-                            <button data-toggle="modal" data-target="#editBooking{{ booking.id }}" class="btn btn-info"><i class="fa fa-edit"></i></button>
-                            {% include 'modals/update_room_book.html' %}
-                        {% endif %}
                         {% if booking.status == 1 %}
                         <button data-toggle="modal" data-target="#delete_booking{{ booking.id }}" class="btn btn-danger"><i class="fa fa-trash"></i></button>
                             {% include 'modals/booking_delete.html' %}
@@ -79,6 +75,8 @@
         {% endif %}
 
     </div>
+
+
 
 
 {% endblock content %}

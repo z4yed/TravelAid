@@ -360,8 +360,6 @@ class ProfileView(LoginRequiredMixin, View):
         zip_code = data.get('zip_code')
         description = data.get('description')
 
-
-
         profile_obj = get_object_or_404(UserProfile, pk=pk)
         profile_obj.user.first_name = first_name
         profile_obj.user.last_name = last_name
@@ -377,13 +375,6 @@ class ProfileView(LoginRequiredMixin, View):
             profile_obj.profile_picture = profile_picture
         profile_obj.description = description
         profile_obj.save()
-
-        if request.user.is_doctor:
-            profile_obj.expertise.clear()
-            expertises = data.getlist('expertises')
-            for exp in expertises:
-                obj = Expertise.objects.get(pk=int(exp))
-                profile_obj.expertise.add(obj)
 
         messages.success(request, 'Profile Updated Successfully. ')
         if profile_obj.user.is_doctor:

@@ -113,20 +113,6 @@
                 </div>
             </div>
 
-        {% if request.user.is_doctor %}
-            <div class="row mt-4">
-                <div class="col-md-6">
-                    <label for="expertises" class="form-check-label my-3 font-weight-bold">Your Expertises</label>
-                    <select name="expertises" id="expertises" class="form-control" multiple>
-                        {% for expertise in expertises %}
-                            <option value="{{ expertise.id }}" {% if expertise in profile_exp %} selected {% endif %} >{{ expertise.name }}</option>
-                        {% endfor %}
-
-                    </select>
-                </div>
-            </div>
-        {% endif %}
-
         </div>
 
         <button type="submit" class="btn btn-light text-dark my-4">Submit</button>

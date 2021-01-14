@@ -42,7 +42,7 @@
             </div>
         </div>
 
-         {% for date in room.book_room.all %}
+         {% for date in room.book_room.all %}  <!-- Used In JS to disable previous & Next booked days.  -->
             {% if date.status == 2 %}
                 <input class="start_date" type="hidden" readonly value="{{ date.start_date | date:"m/d/Y" }}">
                 <input class="end_date" type="hidden" readonly value="{{ date.end_date | date:"m/d/Y" }}">
@@ -84,6 +84,7 @@
     <script>
         $(document).ready(function (){
             let booked_days = []
+            // booked days contain all the previous booked days
 
             Date.prototype.addDays = function(days) {
                 let date = new Date(this.valueOf());
@@ -116,7 +117,7 @@
                 beforeShowDay: function(date){
                     let string = jQuery.datepicker.formatDate('yy-m-dd', date);
                     return [ booked_days.indexOf(string) == -1 ]
-                },
+                },  // Disabling if date is in booked_days array
 
                 onSelect:function (){
 
