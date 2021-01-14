@@ -10,9 +10,10 @@ from services.models.hospital_models import Hospital, Appointment, AppointmentBi
 from users_auth.models import User
 from utils.filter import filter_by_address
 from utils.print_invoice import render_to_pdf
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class HospitalList(View):
+class HospitalList(LoginRequiredMixin, View):
     def get(self, request):
         districts = District.objects.all()
         hospitals = Hospital.objects.all()
@@ -38,7 +39,7 @@ class HospitalList(View):
         return render(request, 'services/hospital/list.html', context)
 
 
-class HospitalDetailsView(View):
+class HospitalDetailsView(LoginRequiredMixin, View):
     def get(self, request, id):
         hospital_object = get_object_or_404(Hospital, pk=id)
         doctors = hospital_object.doctors.all()
@@ -49,7 +50,7 @@ class HospitalDetailsView(View):
         return render(request, 'services/hospital/details.html', context)
 
 
-class DoctorDetailsView(View):
+class DoctorDetailsView(LoginRequiredMixin, View):
     def get(self, request, doctor_id):
         doctor_obj = get_object_or_404(User, pk=doctor_id)
         expertises = doctor_obj.user_info.expertise.all()
@@ -75,7 +76,7 @@ class DoctorDetailsView(View):
         return redirect('services:user_appointments_url', user_id=request.user.id)
 
 
-class UserAppointmentView(View):
+class UserAppointmentView(LoginRequiredMixin, View):
     def get(self, request, user_id):
         user_obj = get_object_or_404(User, pk=user_id)
 
@@ -100,7 +101,7 @@ class UserAppointmentView(View):
         return redirect('services:user_appointments_url', user_id=request.user.id)
 
 
-class DeleteAppointmentView(View):
+class DeleteAppointmentView(LoginRequiredMixin, View):
     def get(self, request, appointment_id):
         appointment = get_object_or_404(Appointment, pk=appointment_id)
         appointment.delete()
@@ -108,7 +109,7 @@ class DeleteAppointmentView(View):
         return redirect('services:user_appointments_url', user_id=request.user.id)
 
 
-class ManageAppointmentsView(View):
+class ManageAppointmentsView(LoginRequiredMixin, View):
     def get(self, request, doctor_id):
         doctor_obj = get_object_or_404(User, pk=doctor_id)
         pending_appointments = Appointment.objects.filter(doctor=doctor_obj, status=1)
@@ -160,7 +161,7 @@ class ManageAppointmentsView(View):
         return redirect('services:manage_appointments_url', doctor_id=request.user.id)
 
 
-class DownloadAppointmentInvoice(View):
+class DownloadAppointmentInvoice(LoginRequiredMixin, View):
     def get(self, request, appointment_bill_id, *args, **kwargs):
         appointment_obj = get_object_or_404(Appointment, pk=appointment_bill_id)
         invoice_obj = AppointmentBill.objects.get(appointment=appointment_obj)

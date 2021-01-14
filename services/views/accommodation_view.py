@@ -8,9 +8,10 @@ from address.models import District, Address
 from services.models.accommodation_models import Accommodation, Room, BookAccommodation, AccommodationBillPayment
 from utils.filter import filter_by_address, filter_room
 from utils.print_invoice import render_to_pdf
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
-class AccommodationList(View):
+class AccommodationList(LoginRequiredMixin, View):
     def get(self, request):
         districts = District.objects.all()
         accommodations = Accommodation.objects.all()
@@ -36,7 +37,7 @@ class AccommodationList(View):
         return render(request, 'services/accommodation/list.html', context)
 
 
-class AccommodationDetailView(View):
+class AccommodationDetailView(LoginRequiredMixin, View):
     def get(self, request, pk):
         accommodation_obj = get_object_or_404(Accommodation, pk=pk)
         rooms = accommodation_obj.room_set.all()
@@ -70,7 +71,7 @@ class AccommodationDetailView(View):
         return render(request, 'services/accommodation/details.html', context)
 
 
-class RoomDetailView(View):
+class RoomDetailView(LoginRequiredMixin, View):
     def get(self, request, pk):
         room_obj = get_object_or_404(Room, pk=pk)
         context = {
@@ -94,7 +95,7 @@ class RoomDetailView(View):
         return redirect('services:bookings_url', user_id=request.user.id)
 
 
-class BookingsView(View):
+class BookingsView(LoginRequiredMixin, View):
     def get(self, request, user_id):
         bookings = BookAccommodation.objects.filter(user=request.user)
         context = {
@@ -123,7 +124,7 @@ class BookingsView(View):
         return redirect('services:bookings_url', user_id=booking_obj.user.id)
 
 
-class DownloadInvoice(View):
+class DownloadInvoice(LoginRequiredMixin,View):
     def get(self, request, booking_id, *args, **kwargs):
         invoice_obj = get_object_or_404(BookAccommodation, pk=booking_id)
 
@@ -140,7 +141,7 @@ class DownloadInvoice(View):
         return response
 
 
-class AccommodationPaymentView(View):
+class AccommodationPaymentView(LoginRequiredMixin, View):
     def post(self, request, booking_id):
         data = request.POST
         booking_id = data.get('booking_id')
@@ -173,7 +174,7 @@ class AccommodationPaymentView(View):
         return redirect('services:bookings_url', user_id=bill_obj.user.id)
 
 
-class BookingDeleteView(View):
+class BookingDeleteView(LoginRequiredMixin, View):
     def get(self, request, booking_id):
         booking_obj = get_object_or_404(BookAccommodation, pk=booking_id)
         user = booking_obj.user

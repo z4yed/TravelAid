@@ -1,5 +1,7 @@
-from django.http import HttpResponse
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from django.views import View
 from django.contrib import auth, messages
 
@@ -19,15 +21,15 @@ class HomeView(View):
         return render(request, 'home.html', context)
 
 
-class AdminDashboardView(View):
+class AdminDashboardView(LoginRequiredMixin, View):
     def get(self, request):
         context = {
 
         }
-        return render(request, 'dashboard/admin_dashboard.html', context)
+        return HttpResponseRedirect(reverse('admin:index'))
 
 
-class DoctorDashboardView(View):
+class DoctorDashboardView(LoginRequiredMixin, View):
     def get(self, request, doctor_id):
         doctor_obj = get_object_or_404(User, pk=doctor_id)
         pending_appointments = Appointment.objects.filter(doctor=doctor_obj, status=1)
@@ -40,10 +42,13 @@ class DoctorDashboardView(View):
             'rejected_appointments': len(rejected_appointments),
             'total_appointments': len(total_appointments),
         }
-        return render(request, 'dashboard/doctor_dashboard.html', context)
+        if doctor_id == request.user.id:
+            return render(request, 'dashboard/doctor_dashboard.html', context)
+        else:
+            return HttpResponse("You are not authorized to view this Page. ")
 
 
-class PoliceDashboardView(View):
+class PoliceDashboardView(LoginRequiredMixin, View):
     def get(self, request):
         context = {
 
@@ -51,7 +56,7 @@ class PoliceDashboardView(View):
         return render(request, 'dashboard/police_dashboard.html', context)
 
 
-class ManagerDashboardView(View):
+class ManagerDashboardView(LoginRequiredMixin, View):
     def get(self, request, manager_id):
         manager_obj = get_object_or_404(User, pk=manager_id)
         districts = District.objects.all()
@@ -70,10 +75,13 @@ class ManagerDashboardView(View):
             'room_type': list(ROOM_TYPE_CHOICES),
             'pending_bookings': pending_bookings,
         }
-        return render(request, 'dashboard/manager_dashboard.html', context)
+        if manager_id == request.user.id:
+            return render(request, 'dashboard/manager_dashboard.html', context)
+        else:
+            return HttpResponse("You are not authorized to view this Page. ")
 
 
-class AccommodationManageView(View):
+class AccommodationManageView(LoginRequiredMixin, View):
     def get(self, request, **kwargs):
         if 'deletable_id' in kwargs:
             deletable_obj = get_object_or_404(Accommodation, pk=kwargs.get('deletable_id'))
@@ -129,7 +137,7 @@ class AccommodationManageView(View):
         return redirect('authenticate:manager_dashboard_url', manager_id=request.user.id)
 
 
-class RoomManageView(View):
+class RoomManageView(LoginRequiredMixin, View):
     def get(self, request, **kwargs):
         if 'deletable_id' in kwargs:
             room_obj = get_object_or_404(Room, pk=kwargs.get('deletable_id'))
@@ -167,7 +175,7 @@ class RoomManageView(View):
         return redirect('authenticate:manager_dashboard_url', manager_id=request.user.id)
 
 
-class ManageBookingRequestView(View):
+class ManageBookingRequestView(LoginRequiredMixin, View):
     def get(self, request, **kwargs):
         manager_obj = get_object_or_404(User, pk=kwargs.get('manager_id'))
         accommodations = Accommodation.objects.filter(owner=manager_obj)
@@ -328,7 +336,7 @@ class RegistrationView(View):
                 return redirect('authenticate:registration_url')
 
 
-class ProfileView(View):
+class ProfileView(LoginRequiredMixin, View):
     def get(self, request, pk):
         profile_obj = get_object_or_404(UserProfile, pk=pk)
         districts = District.objects.all()
