@@ -34,34 +34,34 @@
 
             </section>
 
-            <section id="filter_doctors" class="my-5">
-
-                <h3 class="text-center" style="font-weight: bold">Filter Doctors</h3>
-
-                <form method='post' action=""> {% csrf_token %}
-                    <div class="row">
-                        <div class="col-md-4">
-                            <select id='room_status' name='room_status' class="form-control">
-                                <option value='' selected>Select Status</option>
-                                <option value="1">Available</option>
-                                <option value="3">Booked</option>
-                            </select>
-                        </div>
-                        <div class="col-md-4">
-                            <select id='room_type' name='room_type' class="form-control">
-                                <option value='' selected>Select Type</option>
-                                <option value="AC">AC</option>
-                                <option value="Non AC">Non AC</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-2">
-                            <input type="submit" class="btn btn-light text-dark" id="search_submit">
-                        </div>
-                    </div>
-
-                </form>
-            </section>
+{#            <section id="filter_doctors" class="my-5">#}
+{##}
+{#                <h3 class="text-center" style="font-weight: bold">Filter Doctors</h3>#}
+{##}
+{#                <form method='post' action=""> {% csrf_token %}#}
+{#                    <div class="row">#}
+{#                        <div class="col-md-4">#}
+{#                            <select id='room_status' name='room_status' class="form-control">#}
+{#                                <option value='' selected>Select Status</option>#}
+{#                                <option value="1">Available</option>#}
+{#                                <option value="3">Booked</option>#}
+{#                            </select>#}
+{#                        </div>#}
+{#                        <div class="col-md-4">#}
+{#                            <select id='room_type' name='room_type' class="form-control">#}
+{#                                <option value='' selected>Select Type</option>#}
+{#                                <option value="AC">AC</option>#}
+{#                                <option value="Non AC">Non AC</option>#}
+{#                            </select>#}
+{#                        </div>#}
+{##}
+{#                        <div class="col-md-2">#}
+{#                            <input type="submit" class="btn btn-light text-dark" id="search_submit">#}
+{#                        </div>#}
+{#                    </div>#}
+{##}
+{#                </form>#}
+{#            </section>#}
 
             <section id="doctors_list" class="my-5">
                 {% if rooms.count == 0 %}

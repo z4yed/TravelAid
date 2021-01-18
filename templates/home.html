@@ -4,6 +4,13 @@
 {% block content %}
 
     {% include 'navbar.html' %}
+
+        {% if messages  %}
+              {% for message in messages  %}
+                <h5 class="font-weight-bold text-center alert alert-{{message.tags}}"> {{message}} </h5>
+              {% endfor %}
+        {% endif %}
+
     {% include 'slider.html' %}
 
     <section class="m-5" id="Services" style="background: #e4dde9">
@@ -13,7 +20,7 @@
 			</div>
 		</div>
 		<div class="row mx-3">
-			<div class="col-lg-4">
+			<div class="col-lg-6">
 				<div class="card mb-3">
 					<div class="card-header">
 						<h3 class="text-center">Accommodations</h3>
@@ -26,7 +33,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="col-lg-4">
+			<div class="col-lg-6">
 				<div class="card mb-3">
 					<div class="card-header">
 						<h3 class="text-center">Hospital</h3>
@@ -55,10 +62,10 @@
                 </div>
 
                 <div class="col-md-8">
-                    <form class="form from-group" method="post">
+                    <form class="form from-group" method="post" action="{% url 'authenticate:send_message' %}">
                         {% csrf_token %}
                         {% if user.is_authenticated %}
-                            <textarea id="id_proceduress" maxlength="2000" name="description" rows="50"
+                            <textarea id="message" maxlength="2000" name="message" rows="50"
                                           data-processed="0"
                                           data-config='{"skin": "moono-lisa", "toolbar_Basic":
                               [["Source", "-", "Bold", "Italic", "Image"]],

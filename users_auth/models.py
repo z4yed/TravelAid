@@ -62,3 +62,19 @@ class UserProfile(models.Model):
 def create_user_information(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
+
+
+class Contact(models.Model):
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True,blank=True)
+    message = RichTextUploadingField(null=True, blank=True)
+    response = RichTextUploadingField(null=True, blank=True)
+
+    def __str__(self):
+        if self.user.is_staff:
+            return "From : {a}".format(a=self.user.username)
+        else:
+            return "From : {a}".format(a=self.user.get_full_name())
+
+    class Meta:
+        db_table = 'users_message'
+        ordering = ('-id',)

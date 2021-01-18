@@ -7,7 +7,7 @@ from django.contrib import auth, messages
 
 from services.models import Hospital, Appointment, Accommodation, Room, ROOM_TYPE_CHOICES, BookAccommodation
 from system.models import Expertise
-from .models import User, UserProfile
+from .models import User, UserProfile, Contact
 from address.models import District, Address
 
 # Create your views here.
@@ -383,3 +383,15 @@ class ProfileView(LoginRequiredMixin, View):
             return redirect('authenticate:manager_dashboard_url', manager_id=profile_obj.user.id)
 
         return redirect('authenticate:profile_url', pk=profile_obj.id)
+
+
+class ManageUserMessage(View):
+    def post(self, request, **kwargs):
+        message = request.POST.get('message')
+
+        contact_obj = Contact(user=request.user, message=message)
+        contact_obj.save()
+
+        messages.success(request, 'Feedback Sent Successfully. ')
+        return redirect('home_url')
+
