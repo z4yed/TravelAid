@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    {% include 'navbar.html' %}
+    <div class="container">
+        {% if messages  %}
+              {% for message in messages  %}
+                <h5 class="font-weight-bold text-center alert alert-{{message.tags}}"> {{message}} </h5>
+              {% endfor %}
+        {% endif %}
+
+        <div class="jumbotron">
+            {% if bookings.count == 0 %}
+                <h2 class="text-center">You haven't book any Room. Please, <a href="{% url 'services:accommodation_list_url' %}">Book One</a></h2>
+            {% else %}
+                <h2 class="text-center">Your All Bookings. </h2>
+            {% endif %}
+        </div>
+
+    {% if bookings.count != 0 %}
+    
+        <div id="table">
+            <table class="table table-stripped">
+                  <thead>
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Cottage</th>
+                      <th scope="col">Room Number</th>
+                      <th scope="col">Starting Date</th>
+                      <th scope="col">Ending Date</th>
+                      <th scope="col">Total Costs(BDT)</th>
+                      <th scope="col">Paid(BDT)</th>
+                      <th scope="col">Status</th>
+                      <th scope="col" class="text-center">Action</th>
+                    </tr>
+
+                  </thead>
+                  <tbody>
+
+
+                {% for booking in bookings %}
+                  <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td><a href="{% url 'services:accommodation_detail_url' booking.room.accommodation.id %}">{{ booking.room.accommodation.name }}</a></td>
+                    <td><a href="{% url 'services:room_details' booking.room.id %}">{{ booking.room.room_number }}</a></td>
+                    <td>{{ booking.start_date| date:"b d, Y"}}</td>
+                    <td>{{ booking.end_date | date:"b d, Y" }}</td>
+                    <td>{{ booking.total_bills}}</td>
+                    <td>{{ booking.paid_bills}}</td>
+                    <td>{{ booking.get_status_display }}</td>
+                    <td>
+                        {% if booking.paid_bills < booking.total_bills %}
+                            <button data-toggle="modal" data-target="#payment{{ booking.id }}" class="btn btn-success"><i class="fa fa-money"></i></button>
+                            {% include 'modals/payment_modal.html' %}
+                        {% endif %}
+                            <button data-toggle="modal" data-target="#paymentHistory{{ booking.id }}" class="btn btn-secondary"><i class="fa fa-history"></i></button>
+                            {% include 'modals/payment_history.html' %}
+                        {% if booking.status == 2 %}
+                            <a href="{% url 'services:print_invoice_url' booking.id %}" class="btn btn-success"><i class="fa fa-print"></i></a>
+                        {% endif %}
+                        <button data-toggle="modal" data-target="#bookingDetails{{ booking.id }}" class="btn btn-primary"><i class="fa fa-eye"></i></button>
+                            {% include 'modals/view_booking_details.html' %}
+                        {% if booking.status == 1 %}
+                        <button data-toggle="modal" data-target="#delete_booking{{ booking.id }}" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                            {% include 'modals/booking_delete.html' %}
+                       {% endif %}
+                    </td>
+                  </tr>
+
+                {% endfor %}
+              </tbody>
+              </table>
+        </div>
+        {% endif %}
+
+    </div>
+
+
+
+
+{% endblock content %}
+
+{% block script %}
+
+    <script>
+    function  calculate_days(){
+        let start= $("#from_date").datepicker("getDate");
+        let end= $("#to_date").datepicker("getDate");
+        let days = (end- start) / (1000 * 60 * 60 * 24);
+        if(days < 0){
+            return "Invalid"
+        }
+        else{
+            return days
+        }
+    }
+    </script>
+
+    <script>
+        $(document).ready(function (){
+
+            $("#payment_bdt").on('keyup', function (){
+                let amount = Number($("#payment_bdt").val())
+                console.log(amount)
+                if(amount < 0 || isNaN(amount)){
+                    $("#error_msg").text("Amount Must Be Positive Number. ");
+                    $("#payment_bdt").css('border', '1px solid red');
+                    $("#payment_btn").hide()
+                }
+                else{
+                    $("#error_msg").text('');
+                    $("#payment_bdt").css('border', 'yellow')
+                    $("#payment_btn").show()
+                }
+
+            })
+
+            $("#from_date").datepicker({
+                onSelect:function (){
+                    let date = $("#from_date").datepicker('getDate')
+                    let today = new Date()
+                    today.setHours(0,0,0,0);
+                    if(date < today){
+                      $("#error_msg").text('You can\'t book from earlier than today. ')
+                      $("#to_date_div").hide()
+                      $("#update_btn").hide()
+                    }
+                    else{
+                      $("#to_date_div").show()
+                      $("#error_msg").text('')
+                      $("#update_btn").show()
+                    }
+                    let days = calculate_days()
+                    if(days != 'Invalid'){
+                      $("#error_msg2").text('')
+                      $("#update_btn").show()
+                      let cpd = $("#cost_per_day").val()
+                      let total_bills = Number(cpd) * (days+1)
+                      $("#total_bills").val(total_bills)
+                      }
+                      else{
+                          $("#error_msg2").text('End Date Must be greater than Start Date')
+                          $("#update_btn").hide()
+                      }
+                },
+                dateFormat: "M d, yy",
+                changeMonth: true,
+                changeYear: true,
+
+            })
+
+            $("#to_date").datepicker({
+                dateFormat: "M d, yy",
+                changeMonth: true,
+                changeYear: true,
+                onSelect: function () {
+                  let days = calculate_days()
+                  if(days != 'Invalid'){
+                      $("#error_msg2").text('')
+                      $("#update_btn").show()
+                      let cpd = $("#cost_per_day").val()
+                      let total_bills = Number(cpd) * (days+1)
+                      $("#total_bills").val(total_bills)
+                  }
+                  else{
+                      $("#error_msg2").text('End Date Must be greater than Start Date')
+                      $("#update_btn").hide()
+                  }
+                }
+            })
+
+        })
+    </script>
+{% endblock script %}

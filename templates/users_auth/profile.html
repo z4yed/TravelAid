@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+    {% if request.user.is_user %}
+        {% include 'navbar.html' %}
+    {% else %}
+
+          <div class="row text-center font-weight-bold bg-dark">
+                <div class="col-md-4">
+                    {% if request.user.is_doctor %}
+                         <a class="nav-link" href="{% url 'authenticate:doctor_dashboard_url' request.user.id %}">Dashboard</a>
+                    {% endif %}
+                    {% if request.user.is_manager %}
+                        <a class="nav-link" href="{% url 'authenticate:manager_dashboard_url' request.user.id %}">Dashboard</a>
+                    {% endif %}
+                </div>
+                <div class="col-md-4">
+                    <h3 class="font-weight-bold">Your Profile </h3>
+                </div>
+          </div>
+
+    {% endif %}
+
+    {% if messages  %}
+          {% for message in messages  %}
+            <h5 class="font-weight-bold text-center alert alert-{{message.tags}}"> {{message}} </h5>
+          {% endfor %}
+    {% endif %}
+
+    <div class="container" style="background: rgba(162,163,154,0.99)">
+        <form action="{% url 'authenticate:profile_url' profile.id %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="jumbotron">
+                <div class="row">
+                    <div class="col-md-2"></div>
+                    <div class="col-md-3">
+                        <img src="{{ profile.profile_picture.url }}" height="150" width="150" alt="Image Not Available." class="rounded-circle">
+                        <input type="file" name="profile_picture" class="mt-3">
+                    </div>
+                    <div class="col-md-6 mt-3">
+                        <h5 class="font-weight-bold">{{ full_name }}</h5>
+                        <h6 class="font-weight-bold"> <i class="fa fa-map-marker"></i>{{ profile.address }}</h6>
+                    </div>
+                </div>
+
+            </div>
+
+        <div id="personal_info">
+            <div class="row my-3">
+                <div class="col-md-4">
+                    <label for="email" class="form-check-label">Email</label>
+                    <input type="text" class="form-control" name="email" id="email" value="{{ profile.user.username }}" disabled>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+            <div class="row my-3">
+                <div class="col-md-4">
+                    <label for="email" class="form-check-label">First Name</label>
+                    <input type="text" class="form-control" name="first_name" id="first_name" value="{{ profile.user.first_name }}">
+                </div>
+                <div class="col-md-4">
+                    <label for="email" class="form-check-label">Last Name</label>
+                    <input type="text" class="form-control" name="last_name" id="last_name" value="{{ profile.user.last_name }}">
+                </div>
+                <div class="col-md-4">
+                    <label for="email" class="form-check-label">Contact Number</label>
+                    <input type="text" class="form-control" name="cell" id="cell" value="{{ profile.cell }}">
+                </div>
+            </div>
+
+            <div class="row my-4">
+                <div class="col-4">
+                    <label for="address">Permanent Address</label>
+                    <input type="text" id="address" value="{{ profile.address.address }}"  name="address" class="form-control" placeholder="Permanent Address" required />
+                </div>
+                <div class="col-4">
+                    <label for="address">District</label>
+                    <select name="district" id="district" class="form-control" required>
+                        {% for d in districts %}
+                            <option {% ifequal profile.address.district d %} selected {% endifequal %} value="{{ d.id }}">{{ d.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-4">
+                    <label for="address">Zip Code</label>
+                    <input type="numbers" id="zip_code" maxlength="4" name="zip_code" value="{{ profile.address.zip_code }}" class="form-control" placeholder="Zip Code" required />
+                </div>
+            </div>
+
+            <div class="row mt-5 mb-1">
+                <div class="col-12">
+                    <label for="description"> Brief About Yourself </label>
+                    <textarea id="description" maxlength="2000" name="description" rows="50"
+                                          data-processed="0"
+                                          data-config='{"skin": "moono-lisa", "toolbar_Basic":
+                              [["Source", "-", "Bold", "Italic", "Image"]],
+                               "toolbar_Full": [["Styles", "Format", "Bold", "Italic", "Underline",
+                                "Strike", "SpellChecker", "Undo", "Redo"], ["Link", "Unlink", "Anchor"],
+                                ["Image", "Flash", "Table", "HorizontalRule"], ["TextColor", "BGColor"],
+                                ["Smiley", "SpecialChar"], ["Source"],  ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"], ["Outdent", "Indent"]],
+                                "toolbar": "Full", "height": 200, "filebrowserWindowWidth": 940,
+
+                                "filebrowserWindowHeight": 725,
+                                "filebrowserUploadUrl": "/ckeditor/upload/",
+                                "filebrowserBrowseUrl": "/ckeditor/browse/",
+
+                                "language": "en-us" }'
+                                          data-external-plugin-resources='[]'
+                                          data-type="ckeditortype"> {{ profile.description }}
+                     </textarea>
+                </div>
+            </div>
+
+        </div>
+
+        <button type="submit" class="btn btn-light text-dark my-4">Submit</button>
+
+        </form>
+    </div>
+
+{% endblock %}

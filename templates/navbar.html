@@ -1,0 +1,45 @@
+{% load static %}
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark sticky-top  ">
+    <a class="navbar-brand" href="{% url 'home_url' %}">TravelAid</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+     <span class="navbar-toggler-icon"></span>
+   </button>
+
+    <div class="navbar-collapse collapse w-100 order-3 dual-collapse2 ml-auto">
+
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'services:accommodation_list_url' %}">Accommodations</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'services:hospital_list_url' %}">Hospitals</a>
+        </li>
+    </ul>
+
+      <ul class="navbar-nav ml-auto">
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'services:user_appointments_url' request.user.id %}">Appointments</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'services:bookings_url' request.user.id %}">Bookings</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'authenticate:profile_url' request.user.id %}">Profile</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'authenticate:logout_url' %}">Log Out</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'authenticate:registration_url' %}">Sing Up</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'authenticate:login_url' %}">Log In</a>
+        </li>
+        {% endif%}
+      </ul>
+    </div>
+</nav>

@@ -1,0 +1,65 @@
+{% extends 'doctor_base.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="container">
+
+        {% if messages  %}
+              {% for message in messages  %}
+                <h5 class="font-weight-bold text-center alert alert-{{message.tags}}"> {{message}} </h5>
+              {% endfor %}
+        {% endif %}
+
+        <div class="row ml-5 mt-5">
+
+            <div class="col-md-3" style="background: rgba(140,163,110,0.99)">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col" class="text-center">Total <br> Appointments</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="text-center"><h4 class="font-weight-bold">{{ total_appointments }}</h4></td>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+
+            <div class="col-md-3 mx-4" style="background: rgba(140,163,110,0.99)">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col" class="text-center">Appointment <br> Requests</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="text-center"><h4 class="font-weight-bold">{{ pending_appointments.count }}</h4></td>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+
+            <div class="col-md-3" style="background: rgba(140,163,110,0.99)">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th scope="col" class="text-center">Approved <br> Appointments</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="text-center"><h4 class="font-weight-bold">{{ confirmed_appointments }}</h4></td>
+                    </tr>
+                  </tbody>
+                </table>
+            </div>
+
+        </div>
+
+
+    </div>
+
+{% endblock content %}
