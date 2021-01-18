@@ -1,0 +1,47 @@
+<!-- Modal -->
+<div class="modal fade" id="rejectAppointment{{ appointment.id }}" role="dialog">
+<form action="{% url 'services:reject_appointment_url' appointment.id %}" method="post"> {% csrf_token %}
+    <div class="modal-dialog modal-lg">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h4 class="modal-title">Reject Appointment</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="row my-3">
+                    <div class="col-md-12">
+                        <label for="doctors_reject_note" class="form-check-label">Doctor's Note<span style="font-size: 14px; font-weight: bold;" id="error_msg2" class="text-danger"></span> </label>
+                        <textarea id="doctors_reject_note{{ appointment.id }}" maxlength="2000" name="doctors_reject_note" rows="50"
+                                          data-processed="0"
+                                          data-config='{"skin": "moono-lisa", "toolbar_Basic":
+                              [["Source", "-", "Bold", "Italic", "Image"]],
+                               "toolbar_Full": [["Styles", "Format", "Bold", "Italic", "Underline",
+                                "Strike", "SpellChecker", "Undo", "Redo"], ["Link", "Unlink", "Anchor"],
+                                ["Image", "Flash", "Table", "HorizontalRule"], ["TextColor", "BGColor"],
+                                ["Smiley", "SpecialChar"], ["Source"],  ["JustifyLeft", "JustifyCenter", "JustifyRight", "JustifyBlock"], ["Outdent", "Indent"]],
+                                "toolbar": "Full", "height": 200, "filebrowserWindowWidth": 940,
+
+                                "filebrowserWindowHeight": 725,
+                                "filebrowserUploadUrl": "/ckeditor/upload/",
+                                "filebrowserBrowseUrl": "/ckeditor/browse/",
+
+                                "language": "en-us" }'
+                                          data-external-plugin-resources='[]'
+                                          data-type="ckeditortype" required>
+
+                             </textarea>
+                    </div>
+                </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" id="release_appointment_btn{{ appointment.id }}" class="btn btn-danger">Reject</button>
+          <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+
+</form>
+</div>

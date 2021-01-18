@@ -1,0 +1,22 @@
+<!-- Modal -->
+<div class="modal fade" id="deleteRoom{{ room.id }}" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h7 class="modal-title">Are You Sure to Delete the Following Room?</h7>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <h5 class="font-weight-bold">Room # {{ room.room_number }} of {{ room.accommodation.name }}</h5>
+        </div>
+        <div class="modal-footer">
+            <a href="{% url 'authenticate:delete_room_url' room.id %}" class="btn btn-danger">Delete</a>
+          <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+
+</div>

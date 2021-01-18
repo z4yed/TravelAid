@@ -1,0 +1,29 @@
+<!-- Modal -->
+<div class="modal fade" id="rejectBooking{{ booking.id }}" role="dialog">
+<form action="{% url 'authenticate:reject_booking_request' booking.id %}" method="post"> {% csrf_token %}
+    <div class="modal-dialog modal-lg">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h4 class="modal-title">Reject Appointment</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="row my-3">
+                <div class="col-md-12">
+                    <label for="start_date" class="form-check-label">Note (Required)</label>
+                    <textarea name="note" class="form-control" id="manager_note{{ booking.id }}" cols="30" rows="5" required></textarea>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" id="approve_booking_btn{{ booking.id }}" class="btn btn-danger">Reject</button>
+          <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+
+</form>
+</div>

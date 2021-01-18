@@ -1,0 +1,55 @@
+<!-- Modal -->
+<div class="modal fade" id="releaseAppointment{{ appointment.id }}" role="dialog">
+<form action="{% url 'services:release_appointment_url' appointment.id %}" method="post"> {% csrf_token %}
+    <div class="modal-dialog modal-lg">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h4 class="modal-title">Generate Invoice</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="room_charge" class="form-check-label">Room Charge <span style="font-size: 14px; font-weight: bold;" id="error_msg" class="text-danger"></span> </label>
+                        <input onkeyup="calculate_bill()" type="text" id="room_charge" name="room_charge" class="form-control numberField" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="medicine_charge" class="form-check-label">Medicine Charge<span style="font-size: 14px; font-weight: bold;" id="error_msg" class="text-danger"></span> </label>
+                        <input onkeyup="calculate_bill()" type="text" id="medicine_charge" name="medicine_charge" class="form-control numberField" required>
+                    </div>
+                </div>
+                <div class="row my-3" id='to_date_div'>
+                    <div class="col-md-6">
+                        <label for="doctors_fee" class="form-check-label">Doctor's Fee <span style="font-size: 14px; font-weight: bold;" id="error_msg2" class="text-danger"></span> </label>
+                        <input onkeyup="calculate_bill()" type="text" id="doctors_fee" name="doctors_fee" class="form-control numberField" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="others_charge" class="form-check-label">Other's Cost <span style="font-size: 14px; font-weight: bold;" id="error_msg2" class="text-danger"></span> </label>
+                        <input onkeyup="calculate_bill()" type="text" id="others_charge" name="others_charge" class="form-control numberField" required>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="total_bills" class="form-check-label">Total Cost(BDT)</label>
+                        <input readonly type="text" id="total_bills" name="total_bills" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label for="start_date" class="form-check-label">Note (Optional)</label>
+                        <textarea name="note" class="form-control" id="note" cols="30" rows="5"></textarea>
+                    </div>
+                </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" id="request_btn" class="btn btn-success">Generate & Release</button>
+          <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+
+</form>
+</div>

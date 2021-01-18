@@ -1,0 +1,44 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+    <link rel="stylesheet" href="{% static 'fa/css/font-awesome.css' %}">
+    <link rel="stylesheet" href="{% static 'css/jquery-ui.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/jquery-ui-timepicker-addon.min.css' %}">
+
+    {% block title %}
+    
+    {% endblock title%}
+
+    {% block style %}
+
+    {% endblock style %}
+</head>
+<body>
+
+    {% block content %}
+    
+    {% endblock content %}
+    
+    <!-- Ckeditor Files -->
+    <script type="text/javascript" src="{% static 'ckeditor/ckeditor-init.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ckeditor/ckeditor/ckeditor.js' %}"></script>
+
+    <script src="{% static 'js/jquery-3.5.1.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'fa/js/fontawesome.js' %}"></script>
+    <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'js/jquery-ui-timepicker-addon.min.js' %}"></script>
+    <script src="{% static 'js/custom.js' %}"></script>
+    {% block script %}
+        
+    {% endblock script %}
+</body>
+</html>

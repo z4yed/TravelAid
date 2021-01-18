@@ -1,0 +1,233 @@
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+<!------ Include the above in your HEAD tag ---------->
+<style>
+    .register{
+        background: -webkit-linear-gradient(left, #3180af, #366769);
+        margin-top: 3%;
+        padding: 3%;
+    }
+    .register-left{
+        text-align: center;
+        color: #fff;
+        margin-top: 4%;
+    }
+    .register-left input{
+        border: none;
+        border-radius: 1.5rem;
+        padding: 2%;
+        width: 60%;
+        background: #f8f9fa;
+        font-weight: bold;
+        color: #383d41;
+        margin-top: 30%;
+        margin-bottom: 3%;
+        cursor: pointer;
+    }
+    .register-right{
+        background: #f8f9fa;
+        border-top-left-radius: 10% 50%;
+        border-bottom-left-radius: 10% 50%;
+    }
+    .register-left img{
+        margin-top: 15%;
+        margin-bottom: 5%;
+        width: 25%;
+        -webkit-animation: mover 2s infinite  alternate;
+        animation: mover 1s infinite  alternate;
+    }
+    @-webkit-keyframes mover {
+        0% { transform: translateY(0); }
+        100% { transform: translateY(-20px); }
+    }
+    @keyframes mover {
+        0% { transform: translateY(0); }
+        100% { transform: translateY(-20px); }
+    }
+    .register-left p{
+        font-weight: lighter;
+        padding: 12%;
+        margin-top: -9%;
+    }
+    .register .register-form{
+        padding: 10%;
+        margin-top: 10%;
+    }
+    .btnRegister{
+        float: right;
+        margin-top: 2%;
+        border: none;
+        border-radius: 1.5rem;
+        padding: 2%;
+        background: #0062cc;
+        color: #fff;
+        font-weight: 600;
+        width: 50%;
+        cursor: pointer;
+    }
+    .register .nav-tabs{
+        margin-top: 3%;
+        border: none;
+        background: #0062cc;
+        border-radius: 1.5rem;
+        width: 28%;
+        float: right;
+    }
+    .register .nav-tabs .nav-link{
+        padding: 2%;
+        height: 34px;
+        font-weight: 600;
+        color: #fff;
+        border-top-right-radius: 1.5rem;
+        border-bottom-right-radius: 1.5rem;
+    }
+    .register .nav-tabs .nav-link:hover{
+        border: none;
+    }
+    .register .nav-tabs .nav-link.active{
+        width: 100px;
+        color: #0062cc;
+        border: 2px solid #0062cc;
+        border-top-left-radius: 1.5rem;
+        border-bottom-left-radius: 1.5rem;
+    }
+    .register-heading{
+        text-align: center;
+        margin-top: 8%;
+        margin-bottom: -15%;
+        color: #495057;
+    }
+    .register-msg{
+        text-align: center;
+        margin-top: 15%;
+        margin-bottom: -15%;
+        color: #495057;
+    }
+</style>
+<div class="container register">
+    <div class="row">
+        <div class="col-md-3 register-left">
+            <img src="https://image.ibb.co/n7oTvU/logo_white.png" alt=""/>
+            <h3>Welcome</h3>
+            <p>To Travel Guide System</p>
+            <a class="btn bg-light btn-outline-primary text-dark" href="{% url 'authenticate:login_url' %}">Login</a>
+        </div>
+        <div class="col-md-9 register-right">
+
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active col-12" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    <h3 class="register-heading">Register Yourself to Continue with Travel-Aid</h3>
+                    {% for message in messages %}
+                       <p class="register-msg">{{ message }}</p>
+                    {% endfor %}
+                    <form method="post" action="{% url 'authenticate:registration_url' %}">
+                        {% csrf_token %}
+                        <div class="row register-form">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="First Name *" name="first_name" required />
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Email Address *" name="email" required/>
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" class="form-control" placeholder="Password *" name="password" required />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <input type="text" class="form-control" placeholder="Last Name"  name="last_name" />
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" minlength="10" maxlength="11" name="contact_number" class="form-control" placeholder="Contact Number *"  />
+                                </div>
+                                <div class="form-group">
+                                    <input type="password"  name="confirm_password" class="form-control" placeholder="Confirm Password *" required />
+                                </div>
+
+                            </div>
+
+
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-4">
+                                            <input type="text" id="address"  name="address" class="form-control" placeholder="Parmanent Address" required />
+                                        </div>
+                                        <div class="col-4">
+                                            <select name="district" id="district" class="form-control" required>
+                                                <option value="" disabled selected>Select District</option>
+                                                {% for d in district %}
+                                                    <option value="{{ d.id }}">{{ d.name }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="numbers" id="zip_code" maxlength="4" name="zip_code" class="form-control" placeholder="Zip Code" required />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <Label style="font-weight: bold">You Are ? </Label>
+                                    <div class="form-check form-check-inline ml-5">
+                                      <input onclick="manage_user_type('user')" class="form-check-input" type="radio" name="designation" id="normal_user" value="normal_user" checked>
+                                      <label class="form-check-label" for="normal_user">Normal User</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                      <input onclick="manage_user_type('manager')" class="form-check-input" type="radio" name="designation" id="manager" value="manager">
+                                      <label class="form-check-label" for="manager">Manager</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                      <input onclick="manage_user_type('doctor')" class="form-check-input" type="radio" name="designation" id="doctor" value="doctor">
+                                      <label class="form-check-label" for="doctor">Doctor</label>
+                                    </div>
+                                </div>
+
+                                <div class="row d-none" id="doctors_info">
+                                    <div class="col-6">
+                                        <select name="expertises" id="expertises" class="form-control select2" multiple>
+                                            {% for exp in expertises %}
+                                                <option value="{{ exp.id }}">{{ exp.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <select name="hospital" id="hospital" class="form-control">
+                                            <option value="" disabled selected>Select Hospital</option>
+                                            {% for hos in hospitals %}
+                                                <option value="{{ hos.id }}">{{ hos.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                                <input type="submit" class="btnRegister"  value="Register"/>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+</div>
+
+<script>
+    function manage_user_type(type){
+        if(type=='doctor'){
+            $("#doctors_info").removeClass('d-none');
+        }
+        else{
+            $("#doctors_info").addClass('d-none')
+        }
+
+    }
+</script>

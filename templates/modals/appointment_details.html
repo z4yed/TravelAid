@@ -1,0 +1,54 @@
+<!-- Modal -->
+<div class="modal fade" id="appointmentDetails{{ appointment.id }}" role="dialog">
+    <div class="modal-dialog modal-lg">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+
+        <div class="modal-header">
+          <h4 class="modal-title">Appointment Details</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-6 my-3">
+                    <label for="doctor" class="form-check-label font-weight-bold">Doctor</label>
+                    <input class="form-control" type="text" value="{{ appointment.doctor.get_full_name }}" readonly>
+                </div>
+                <div class="col-md-6 my-3">
+                    <label for="date" class="form-check-label font-weight-bold">Appointment Date</label>
+                    <input class="form-control" type="text" value="{{ appointment.date | date:"b d, Y h:i A" }}" readonly>
+                </div>
+            </div>
+
+            <div class="row my-3">
+                <div class="col-md-6 my-3">
+                    <label for="doctor" class="form-check-label font-weight-bold my-3">Patient</label>
+                    <input class="form-control" type="text" value="{{ appointment.patient.get_full_name }}" readonly>
+                </div>
+            </div>
+
+            <div class="row my-2">
+                <div class="col-md-12 my-3">
+                    <label for="doctor" class="form-check-label font-weight-bold my-3">Problem Description</label>
+                    {{ appointment.description | safe }}
+                </div>
+            </div>
+
+            {% if appointment.doctors_note %}
+                <div class="row my-2">
+                    <div class="col-md-12 my-3">
+                        <label for="doctor" class="form-check-label font-weight-bold">Doctors Note</label>
+                          {{ appointment.doctors_note | safe }}
+                    </div>
+                </div>
+           {% endif %}
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-info" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+
+</div>
