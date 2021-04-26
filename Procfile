@@ -1,1 +1,1 @@
-web: travel_aid.wsgi --log-file -
+web: gunicorn travel_aid.wsgi --log-file -
