@@ -25,7 +25,7 @@ SECRET_KEY = 'lieei7^=(%l_fj3m=n(*01jm-gz27l*oukw4ys8x$-%n7*co4r'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'users_auth.User'
 
