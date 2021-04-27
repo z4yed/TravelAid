@@ -151,3 +151,4 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = 'media'
 
 LOGIN_URL = '/auth/login/'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
