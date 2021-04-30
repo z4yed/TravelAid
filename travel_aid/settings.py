@@ -96,14 +96,13 @@ WSGI_APPLICATION = 'travel_aid.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': '',
+        'NAME': 'dej5tq0f2of6sq',
+        'HOST': 'ec2-107-20-153-39.compute-1.amazonaws.com',
+        'USER': 'vykjqkycpetlmo',
+        'PASSWORD': '7b8822caabe5cf803f34c360b634b8356d7802e5dd350446690ef614fe4f8032',
+        'PORT': 5432,
     }
 }
-
-# postgres conf of Hobby Dev
-import dj_database_url
-db_from_env = dj_database_url.config(conn_max_age=600)
-DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
